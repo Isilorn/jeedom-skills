@@ -1,0 +1,26 @@
+"""Tags système Jeedom à préserver intacts — ne jamais tenter de les résoudre en #[O][E][C]#."""
+
+SYSTEM_TAGS: frozenset[str] = frozenset({
+    "#trigger_id#",
+    "#trigger_value#",
+    "#trigger_name#",
+    "#trigger_type#",
+    "#user_connect#",
+    "#sunset#",
+    "#sunrise#",
+    "#time#",
+    "#date#",
+    "#datetime#",
+    "#seconde#",
+    "#minute#",
+    "#heure#",
+    "#jour#",
+    "#mois#",
+    "#annee#",
+    "#sjour#",
+    "#smois#",
+    "#nweek#",
+    "#IP#",
+    "#hostname#",
+    "#jeedom_name#",
+})
