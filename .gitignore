@@ -1,0 +1,41 @@
+# Claude Code local settings (not relevant for the public repo)
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Jeedom skill packages
+*.skill
+
+# Credentials (never commit)
+credentials.json
+~/.config/jeedom-audit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo

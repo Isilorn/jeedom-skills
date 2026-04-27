@@ -1,0 +1,11 @@
+[project]
+name = "jeedom-skills"
+version = "0.1.0"
+description = "Claude Code skills for Jeedom home automation — read-only audit, diagnosis, and explanation tools for the French-speaking Jeedom community"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Isilorn" }]
+readme = "README.md"
+
+# Runtime dependencies are declared per-skill at J1+
+# jeedom-audit/scripts requires: mysql-connector-python, requests
