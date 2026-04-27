@@ -1,7 +1,7 @@
 # jeedom-audit — skill Claude Code
 
-> **🚧 En construction — Jalon J4 terminé (plugins tier-1 complets + WF3/WF4)**
-> La skill `jeedom-audit` n'est pas encore publiée. WF1–WF6 sont tous validés sur box réelle. 6 plugins tier-1 documentés (Virtual, jMQTT, Agenda, Script, Alarme, Thermostat) + pattern générique.
+> **🚧 En construction — Jalon J5 terminé (refs API + consolidation doc)**
+> La skill `jeedom-audit` n'est pas encore publiée. WF1–WF6 sont tous validés sur box réelle. Références API JSON-RPC et HTTP rédigées. 6 plugins tier-1 documentés (Virtual, jMQTT, Agenda, Script, Alarme, Thermostat) + pattern générique.
 > Voir [`docs/PLANNING.md`](docs/PLANNING.md) pour le périmètre complet et le calendrier prévu.
 
 ---
@@ -37,8 +37,9 @@
 | J2 | Workflows DB-only + helpers cœur | **✅ Terminé** |
 | J3 | Logs + API + graphe d'usage + plugins Virtual/jMQTT | **✅ Terminé** |
 | J4 | Plugins tier-1 (Agenda, Script, Alarme, Thermostat, générique) + WF3/WF4 | **✅ Terminé** |
-| J5 | Orchestration avancée (WF12/13) | À venir |
-| J6 | Orchestration + refactor | À venir |
+| J5 | Refs API JSON-RPC + HTTP, sql-cookbook §11, consolidation doc | **✅ Terminé** |
+| J5b | Couche de routage intelligent MySQL/API (`router.py`) | À venir |
+| J6 | Cartographie d'orchestration (WF12/13) | À venir |
 | J7 | Recette, doc communautaire, release V1.0.0 | À venir |
 
 ## Privacy

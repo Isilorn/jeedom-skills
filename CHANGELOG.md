@@ -13,6 +13,31 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [0.5.1] — 2026-04-27
+
+Testé sur Jeedom 4.5.3.
+
+### Added
+
+- `jeedom-audit/references/api-jsonrpc.md` : référence API JSON-RPC Jeedom — méthodes autorisées par famille (Sanity, Découverte, Runtime, Scénarios, Résumés, Système), blacklist V1 (méthodes exactes + verbes), format requête/réponse JSON-RPC 2.0, champs runtime-only (`lastLaunch`, `state`, `currentValue`), codes d'erreur, gotchas
+- `jeedom-audit/references/api-http.md` : transport HTTP — SSL et certificats auto-signés, configuration `credentials.json` (champs API), test de connectivité via curl, timeouts/retry, codes d'erreur transport fréquents, procédure de récupération de la clé API
+- `jeedom-audit/references/sql-cookbook.md §11` : requêtes SQL par plugin tier-1 — thermostat (état multi-thermostats, coefficients appris, capteurs liés), alarme (mode courant, zones et modes), agenda (événements en cours, agendas désactivés, actions orphelines, événements avec état de récurrence)
+- `docs/sessions/J5b-cadrage.md` : brief complet de démarrage de la session J5b — architecture `router.py`, règles de routage par type d'opération, comportement utilisateur, capacités WF en mode API-only, livrables, description des évals 10-12, critère de sortie
+- `docs/decisions/0017-couche-routage-intelligent.md` : ADR — routage transparent (`router.py`) retenu vs flag `--source` explicite vs duplication de fallback
+
+### Fixed
+
+- `jeedom-audit/scripts/db_query.py` : `repeat` (mot réservé MariaDB, présent dans `calendar_event.repeat`) ajouté à la liste des mots auto-backtiqués, au même titre que `trigger` — 4 nouveaux tests, 127/127 passants
+- `jeedom-audit/SKILL.md` §6 : gotchas 6 (`calendar_event.repeat`) et 7 (`cmd.value = NULL` thermostat) ajoutés ; titre "Top-5" → "Gotchas critiques"
+- `jeedom-audit/SKILL.md` §9 : marqueurs `🔄 J3` corrigés en `✅ J3` pour `plugin-virtual.md`, `plugin-jmqtt.md`, `api_call.py`, `logs_query.py`, `usage_graph.py` ; `api-jsonrpc.md` et `api-http.md` ajoutés à l'index
+
+### Discovered
+
+- `api_call.py` était déjà implémenté en J3 — les livrables restants du J5 PLANNING étaient uniquement les deux fichiers de référence doc
+- Le volet "couche de routage intelligent" (PLANNING §3.5) constitue un jalon à part entière (J5b) — trop substantiel pour être un appendice de J5
+
+---
+
 ## [0.5.0] — 2026-04-27
 
 Testé sur Jeedom 4.5.3.
