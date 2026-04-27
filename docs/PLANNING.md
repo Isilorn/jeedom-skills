@@ -1,5 +1,21 @@
 # Brief de planification — skill `jeedom-audit`
 
+> **⚠️ Document de référence original — pas une source d'autorité vivante.**
+>
+> Ce document capture les intentions et décisions de la session d'idéation initiale. Il est **intentionnellement conservé tel quel** pour préserver la traçabilité "prévu vs décidé". Il peut être en décalage avec l'état réel du projet.
+>
+> **Hiérarchie des sources d'autorité (en cas de conflit, la source la plus haute gagne) :**
+>
+> 1. `docs/decisions/` — ADRs : toute décision couverte par une ADR supersède ce document
+> 2. `docs/state/PROJECT_STATE.md` — état actuel du projet (jalons, blocages, prochaines étapes)
+> 3. Le code source et les tests
+> 4. Ce document — intention originale, valide là où aucune des sources ci-dessus ne tranche
+>
+>
+> Modifier ce document uniquement pour un amendement stratégique majeur (cf. `docs/state/CONTRIBUTING-CLAUDE-CODE.md §7`).
+
+---
+
 > Document autonome destiné à être ingéré par Claude Code en mode planification, dans un repo GitHub vide nouvellement créé. Ce brief résume l'intégralité des décisions issues d'une session d'idéation (D1.1 à D13.5) et liste les fichiers de référence à transférer depuis le projet source. **Claude Code n'aura pas accès au projet source** ; tout ce qui n'est pas listé dans la section « Fichiers à transférer » ou inliné ici n'existera pas dans le nouveau contexte.
 >
 > **Note méthodologique** : ce brief lui-même devient `docs/PLANNING.md` dans le nouveau repo (D13.5). Il peut évoluer à mesure que le projet avance, avec ADRs spécifiques pour les amendements non triviaux.

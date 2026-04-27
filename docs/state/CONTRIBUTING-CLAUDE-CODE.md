@@ -104,7 +104,18 @@ Une décision mérite une ADR si elle remplit **au moins un** des critères :
 
 ---
 
-## 7. Quand mettre à jour `docs/PLANNING.md`
+## 7. Hiérarchie des sources d'autorité
+
+En cas de conflit entre deux sources, la source la plus haute dans cette liste a autorité :
+
+1. **`docs/decisions/` (ADRs)** — toute décision couverte par une ADR supersède `docs/PLANNING.md` sur ce point précis
+2. **`docs/state/PROJECT_STATE.md`** — état actuel du projet (jalons terminés, blocages, prochaines étapes)
+3. **Le code source et les tests** — ce qui est implémenté et testé prime sur ce qui était prévu
+4. **`docs/PLANNING.md`** — intention originale, valide là où aucune des sources ci-dessus ne tranche
+
+**Conséquence pratique pour Claude Code :** si PLANNING.md décrit un comportement ou une structure, et qu'une ADR ou PROJECT_STATE.md dit autre chose, suivre l'ADR ou PROJECT_STATE.md sans chercher à réconcilier. Ne jamais modifier PLANNING.md pour le "mettre à jour" — c'est un document historique.
+
+## 8. Quand mettre à jour `docs/PLANNING.md`
 
 Rare. Seulement pour un amendement stratégique : changement de périmètre, version Jeedom cible, décision architecturale majeure révisée. **Un amendement non trivial = ADR documentant le pourquoi du changement.**
 
