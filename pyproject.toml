@@ -1,6 +1,6 @@
 [project]
 name = "jeedom-skills"
-version = "0.1.0"
+version = "0.5.0"
 description = "Claude Code skills for Jeedom home automation — read-only audit, diagnosis, and explanation tools for the French-speaking Jeedom community"
 requires-python = ">=3.10"
 license = { text = "MIT" }

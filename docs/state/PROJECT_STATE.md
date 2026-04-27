@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 0.4.0 (pré-release J3)
-**Jalon en cours** : J3 terminé — J4 à démarrer
+**Version actuelle** : 0.5.0 (pré-release J4)
+**Jalon en cours** : J4 terminé — J5 à démarrer
 **Dernière session** : 2026-04-27
 
 ---
@@ -9,7 +9,7 @@
 ## Ce qui marche
 
 - Infrastructure documentaire J0 complète (ADRs 0001-0016, arborescence, fichiers racine)
-- `jeedom-audit/SKILL.md` rédigé (250 lignes, 11 sections, corrigé cross-check)
+- `jeedom-audit/SKILL.md` rédigé (~260 lignes, 11 sections, 6 plugins tier-1)
 - `scripts/_common/` : `credentials.py`, `ssh.py`, `tags.py`, `sensitive_fields.py`, `version_check.py`
 - `scripts/db_query.py` opérationnel — testé sur box réelle (217 eqLogics, 62 scénarios, 6219 commandes)
 - `scripts/setup.py` interactif fonctionnel
@@ -25,16 +25,23 @@
 - `references/health-checks.md` rédigé (seuils ✅/⚠️/❌)
 - `references/plugin-virtual.md` rédigé (9 sections, patterns commandes, requêtes d'audit)
 - `references/plugin-jmqtt.md` rédigé (9 sections, topics MQTT, jsonPath, daemon)
+- `references/plugin-agenda.md` rédigé (10 sections, `calendar_event`, récurrence, requêtes d'audit)
+- `references/plugin-script.md` rédigé (9 sections, syntaxes, credentials, logs)
+- `references/plugin-alarme.md` rédigé (12 sections, zones, modes, variables spéciales)
+- `references/plugin-thermostat.md` rédigé (11 sections, algorithme temporel, coefficients, logs)
+- `references/plugin-generic-pattern.md` rédigé (4 temps + cas MQTT Manager)
 - `tests/unit/` : 123/123 passants
 - WF1 validé end-to-end sur box réelle (Jeedom 4.5.3, 177 eqLogics actifs, 57 scénarios actifs)
 - WF2 validé end-to-end sur box réelle (API state+lastLaunch + DB arbre + logs scenarioLog/)
+- WF3 validé end-to-end sur box réelle (Thermostat bureau Géraud — db_query + cmd.value + logs_query)
+- WF4 validé end-to-end sur box réelle (plugin thermostat — api_call plugin::listPlugin + eqLogics + logs)
 - WF5 validé end-to-end sur box réelle (scénario 70 "Présence Géraud Shelly")
 - WF6 validé end-to-end sur box réelle (cmd 15663 → trigger+condition scénario 70)
 - Credentials configurés : user RO `jeedom_audit_ro`, `~/.my.cnf` box, `credentials.json` local (perm 600)
 
 ## Ce qui est en cours / en attente
 
-Aucun — J3 fermé proprement.
+Aucun — J4 fermé proprement.
 
 ## Décisions ouvertes
 
@@ -46,23 +53,22 @@ Aucun blocage technique.
 
 ## Prochaines étapes
 
-**J4 — Plugins restants + fin de la couverture tier-1**
+**J5 — à définir avec le PO**
 
-1. Rédiger `references/plugin-agenda.md` (plugin `calendar` sur la box)
-2. Rédiger `references/plugin-script.md`
-3. Rédiger `references/plugin-generic-pattern.md` — pattern 4 temps pour tous les autres plugins
-4. Valider WF3 (lecture de logs structurés) et WF4 (corrélation événements) — s'appuient sur `logs_query.py`
-5. CHANGELOG v0.4.0 + bump version
+Thèmes candidats (selon PLANNING) :
+- Révision cross-check SKILL.md complet (cohérence §3/§8/§9)
+- Enrichissement `sql-cookbook.md` avec les requêtes thermostat/alarme/agenda découvertes en J4
+- Packaging `.skill` et getting-started
 
-**Critère de sortie J4** : références plugins tier-1 complètes + WF3/WF4 validés.
+**Critère de sortie J4** : ✅ atteint — 6 plugins tier-1 documentés + pattern générique + WF3/WF4 validés.
 
-## Découvertes techniques J3 (pour J4+)
+## Découvertes techniques J4 (pour J5+)
 
-- `scenarioLog/` est un répertoire (pas un fichier) — un fichier par scénario : `scenario{ID}.log`
-- `scenarioElement` n'a pas de `scenario_id` — lien via `scenario.scenarioElement` (JSON array)
-- Appels de scénarios dans `scenarioExpression.options["scenario_id"]` (pas dans `expression`)
-- Guillemets doubles en SQL MySQL → valeurs string doivent être entre guillemets simples → toujours utiliser `params`
-- 35 eqLogics virtual, 59 eqLogics jMQTT (principalement Zigbee2MQTT) sur la box de réf.
+- `calendar_event.repeat` est un mot réservé MariaDB — backtick obligatoire dans les requêtes SQL
+- `eqLogic.configuration` d'un agenda contient des champs thermostat hérités (`heating`, `cooling`, etc.) — vides, héritage de modèle partagé
+- `eqType_name = 'alarm'` (sans accent) pour le plugin Alarme
+- `cmd.value` des commandes info thermostat = NULL — valeurs runtime dans `history`, pas dans `cmd`
+- 32 eqLogics calendar (12 actifs), 9 thermostat (9 actifs), 2 alarm (2 actifs), 0 script sur la box de réf.
 
 ## Données connues de la box réelle (Jeedom 4.5.3)
 
@@ -72,11 +78,11 @@ Aucun blocage technique.
 - 58 variables globales dataStore
 - 0 erreur système récente
 - 133 commandes info historisées sans valeur en base (principalement thermostats + météo)
-- 35 eqLogics virtual, 59 eqLogics jMQTT, 36 plugins distincts
+- 35 eqLogics virtual, 59 eqLogics jMQTT, 32 calendar, 9 thermostat, 2 alarm, 36 plugins distincts
 
 ## En attente du PO
 
-Aucune action requise pour démarrer J4.
+Aucune action requise pour démarrer J5.
 
 ---
 

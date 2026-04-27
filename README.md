@@ -1,7 +1,7 @@
 # jeedom-audit — skill Claude Code
 
-> **🚧 En construction — Jalon J3 terminé (logs + API + graphe d'usage)**
-> La skill `jeedom-audit` n'est pas encore publiée. WF1, WF2, WF5 et WF6 sont validés sur box réelle. Les plugins tier-1 restants (Agenda, Script) et les workflows WF3/WF4 arrivent en J4.
+> **🚧 En construction — Jalon J4 terminé (plugins tier-1 complets + WF3/WF4)**
+> La skill `jeedom-audit` n'est pas encore publiée. WF1–WF6 sont tous validés sur box réelle. 6 plugins tier-1 documentés (Virtual, jMQTT, Agenda, Script, Alarme, Thermostat) + pattern générique.
 > Voir [`docs/PLANNING.md`](docs/PLANNING.md) pour le périmètre complet et le calendrier prévu.
 
 ---
@@ -17,7 +17,7 @@
 - Explication pas-à-pas de ce que fait un scénario
 - Graphe d'usage d'une commande ou d'un scénario
 - Suggestions de refactor verbales avec pas-à-pas UI
-- Support tier-1 : Virtual, jMQTT, Agenda, Script
+- Support tier-1 : Virtual, jMQTT, Agenda, Script, Alarme, Thermostat
 
 **Règle absolue** : lecture seule. Toute modification est décrite verbalement et exécutée par l'utilisateur via l'UI Jeedom. Aucun INSERT/UPDATE/DELETE SQL, aucune méthode API modifiante.
 
@@ -36,7 +36,7 @@
 | J1 | Skeleton skill + connexion SSH+MySQL | **✅ Terminé** |
 | J2 | Workflows DB-only + helpers cœur | **✅ Terminé** |
 | J3 | Logs + API + graphe d'usage + plugins Virtual/jMQTT | **✅ Terminé** |
-| J4 | Plugins tier-1 restants (Agenda, Script, générique) + WF3/WF4 | En cours |
+| J4 | Plugins tier-1 (Agenda, Script, Alarme, Thermostat, générique) + WF3/WF4 | **✅ Terminé** |
 | J5 | Orchestration avancée (WF12/13) | À venir |
 | J6 | Orchestration + refactor | À venir |
 | J7 | Recette, doc communautaire, release V1.0.0 | À venir |

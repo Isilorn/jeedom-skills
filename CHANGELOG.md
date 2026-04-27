@@ -13,6 +13,37 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [0.5.0] — 2026-04-27
+
+Testé sur Jeedom 4.5.3.
+
+### Added
+
+- `jeedom-audit/references/plugin-agenda.md` : référence plugin Agenda (`eqType_name = 'calendar'`) — table `calendar_event` (structure complète), règle de récurrence (`repeat` JSON), commandes fixes (`in_progress`, `add_include_date`, `add_exclude_date`), requêtes d'audit, patterns de log
+- `jeedom-audit/references/plugin-script.md` : référence plugin Script — syntaxes (`script`, `url`, `html`, `xml`, `json`), champs `scriptSyntax`/`jsonPath`/`regexp`, sécurité credentials, patterns de log (non présent sur box de réf.)
+- `jeedom-audit/references/plugin-alarme.md` : référence plugin Alarme (`eqType_name = 'alarm'`) — zones multi-déclencheurs avec délais, modes, variables spéciales `#alarm_trigger#` et `#time#`, hooks d'événements (outbreak, activationOk/Ko, reenableTrigger), requêtes d'audit
+- `jeedom-audit/references/plugin-thermostat.md` : référence plugin Thermostat — algorithme temporel avec coefficients autolearn, gestion fenêtres, modes (Confort/Eco/Absent), commandes complètes (order/status/mode/power/lock), requête état multi-thermostats, patterns de log (défaillance, température minimale)
+- `jeedom-audit/references/plugin-generic-pattern.md` : pattern d'inspection en 4 temps pour tous les plugins non tier-1 — identification, eqLogics, commandes, logs ; cas MQTT Manager (`mqtt2`) documenté explicitement
+
+### Changed
+
+- `jeedom-audit/SKILL.md` §8 : 4 nouveaux plugins tier-1 (calendar, script, alarm, thermostat) — total 6 plugins tier-1
+- `jeedom-audit/SKILL.md` §9 : index mis à jour avec statuts J4 pour les 5 nouveaux fichiers de référence
+
+### Validated
+
+- WF3 (diagnostic équipement) validé end-to-end sur box réelle — Thermostat bureau Géraud (db_query + cmd.value + logs_query)
+- WF4 (diagnostic plugin) validé end-to-end sur box réelle — plugin thermostat (api_call plugin::listPlugin + eqLogics status + logs)
+
+### Discovered
+
+- `calendar_event.repeat` est un mot réservé MariaDB — toujours backtick-quoter dans les requêtes SQL
+- `eqLogic.configuration` d'un agenda contient des champs thermostat hérités (`heating`, `cooling`, etc.) — vides, non utilisés par le plugin calendar
+- `eqType_name = 'alarm'` (sans accent) pour le plugin Alarme
+- `cmd.value` des commandes info thermostat = NULL en DB — les valeurs runtime sont dans la table `history`
+
+---
+
 ## [0.4.0] — 2026-04-27
 
 ### Added
