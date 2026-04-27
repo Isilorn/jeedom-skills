@@ -73,7 +73,7 @@ Une décision mérite une ADR si elle remplit **au moins un** des critères :
 | [0011](0011-frontmatter-en-anglais.md) | Frontmatter en anglais, contenu en français | Accepté | 2026-04-27 |
 | [0012](0012-distribution-skill-package.md) | Distribution `.skill` packagé en GitHub Release | Accepté | 2026-04-27 |
 | [0013](0013-licence-mit.md) | Licence MIT | Accepté | 2026-04-27 |
-| [0014](0014-zero-telemetrie.md) | Zéro télémétrie | Accepté | 2026-04-27 |
+| [0014](0014-zero-telemetrie.md) | Télémétrie opt-in (compteurs agrégés uniquement) | Accepté | 2026-04-27 |
 | [0015](0015-strategie-documentaire.md) | Stratégie documentaire à 3 axes | Accepté | 2026-04-27 |
 
 ### Clarifications en session (J0)

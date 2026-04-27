@@ -38,7 +38,7 @@ docs/
 │   └── YYYY-MM-DD-<sujet>.md
 │
 ├── references-source/           ← archives du projet source (historique, non reproductibles tels quels)
-│   ├── audit_db.md              ← schéma DB Jeedom observé empiriquement (à cross-checker à J1)
+│   ├── audit_db.md              ← schéma DB Jeedom observé empiriquement (cross-checké à J1 vs schéma officiel V4-stable)
 │   └── brief-initial.md        ← brief initial (format slash-command obsolète, remplacé par PLANNING.md)
 │
 └── screenshots/                 ← captures fournies par le PO pour README et guides (disponible à J7)
