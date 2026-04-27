@@ -1,7 +1,7 @@
 # jeedom-audit — skill Claude Code
 
-> **🚧 En construction — Jalon J0 (bootstrap documentaire)**
-> Ce repo est en cours d'initialisation. La skill `jeedom-audit` n'est pas encore publiée.
+> **🚧 En construction — Jalon J1 terminé (skeleton + connexion SSH+MySQL)**
+> La skill `jeedom-audit` n'est pas encore publiée. Les workflows sont en cours de développement (J2+).
 > Voir [`docs/PLANNING.md`](docs/PLANNING.md) pour le périmètre complet et le calendrier prévu.
 
 ---
@@ -32,8 +32,8 @@
 
 | Jalon | Description | Statut |
 | --- | --- | --- |
-| J0 | Bootstrap documentaire | **En cours** |
-| J1 | Skeleton skill + connexion SSH+MySQL | À venir |
+| J0 | Bootstrap documentaire | **✅ Terminé** |
+| J1 | Skeleton skill + connexion SSH+MySQL | **✅ Terminé** |
 | J2 | Workflows DB-only + helpers cœur | À venir |
 | J3 | Logs + diagnostic causal | À venir |
 | J4 | Plugins tier-1 | À venir |
