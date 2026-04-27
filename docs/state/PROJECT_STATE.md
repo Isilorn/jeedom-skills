@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 0.3.0 (pré-release J2)
-**Jalon en cours** : J2 terminé — J3 à démarrer
+**Version actuelle** : 0.4.0 (pré-release J3)
+**Jalon en cours** : J3 terminé — J4 à démarrer
 **Dernière session** : 2026-04-27
 
 ---
@@ -15,19 +15,26 @@
 - `scripts/setup.py` interactif fonctionnel
 - `scripts/resolve_cmd_refs.py` — résolution batch #ID# → #[O][E][C]# avec cache de session (17/17 tests)
 - `scripts/scenario_tree_walker.py` — parcours récursif anti-cycle, max_depth, troncature >100 (16/16 tests)
+- `scripts/logs_query.py` — tail SSH structuré, détection auto répertoire, support sous-dossiers (22/22 tests)
+- `scripts/api_call.py` — wrapper JSON-RPC, blacklist V1, retry, filtrage sensible (27/27 tests)
+- `scripts/usage_graph.py` — graphe d'usage cmd/eqLogic/scénario, jointure 4-tables (23/23 tests)
 - `references/connection.md` rédigé
 - `references/sql-cookbook.md` rédigé (10 familles, ~200 lignes)
 - `references/scenario-grammar.md` rédigé (types/subtypes/options, pseudo-code WF5)
 - `references/audit-templates.md` rédigé (12 sections fixes WF1)
 - `references/health-checks.md` rédigé (seuils ✅/⚠️/❌)
-- `tests/unit/` : 51/51 passants (db_query + resolve_cmd_refs + scenario_tree_walker)
-- WF5 validé end-to-end sur box réelle (scénario 70 "Présence Géraud Shelly")
+- `references/plugin-virtual.md` rédigé (9 sections, patterns commandes, requêtes d'audit)
+- `references/plugin-jmqtt.md` rédigé (9 sections, topics MQTT, jsonPath, daemon)
+- `tests/unit/` : 123/123 passants
 - WF1 validé end-to-end sur box réelle (Jeedom 4.5.3, 177 eqLogics actifs, 57 scénarios actifs)
+- WF2 validé end-to-end sur box réelle (API state+lastLaunch + DB arbre + logs scenarioLog/)
+- WF5 validé end-to-end sur box réelle (scénario 70 "Présence Géraud Shelly")
+- WF6 validé end-to-end sur box réelle (cmd 15663 → trigger+condition scénario 70)
 - Credentials configurés : user RO `jeedom_audit_ro`, `~/.my.cnf` box, `credentials.json` local (perm 600)
 
 ## Ce qui est en cours / en attente
 
-Aucun — J2 fermé proprement.
+Aucun — J3 fermé proprement.
 
 ## Décisions ouvertes
 
@@ -39,19 +46,23 @@ Aucun blocage technique.
 
 ## Prochaines étapes
 
-**J3 — Scripts complémentaires + plugins tier-1**
+**J4 — Plugins restants + fin de la couverture tier-1**
 
-Démarrer par la routine de début de session (`docs/state/CONTRIBUTING-CLAUDE-CODE.md §3`), puis :
+1. Rédiger `references/plugin-agenda.md` (plugin `calendar` sur la box)
+2. Rédiger `references/plugin-script.md`
+3. Rédiger `references/plugin-generic-pattern.md` — pattern 4 temps pour tous les autres plugins
+4. Valider WF3 (lecture de logs structurés) et WF4 (corrélation événements) — s'appuient sur `logs_query.py`
+5. CHANGELOG v0.4.0 + bump version
 
-1. Coder `scripts/logs_query.py` — tail SSH structuré sur logs Jeedom (nécessaire pour WF2, WF3, WF4)
-2. Coder `scripts/api_call.py` — wrapper JSON-RPC (blacklist + retry + filtrage sensible)
-3. Valider WF2 (diagnostic scénario) end-to-end sur box réelle — nécessite `logs_query.py` + `api_call.py`
-4. Rédiger `references/plugin-virtual.md` + `references/plugin-jmqtt.md` (tier-1)
-5. Coder `scripts/usage_graph.py` — graphe d'usage (WF6, WF12, WF13)
-6. Valider WF6 end-to-end sur box réelle
-7. Rédiger `references/plugin-agenda.md` + `references/plugin-script.md` + `references/plugin-generic-pattern.md`
+**Critère de sortie J4** : références plugins tier-1 complètes + WF3/WF4 validés.
 
-**Critère de sortie J3** : WF2 (diagnostic scénario) + WF6 (graphe d'usage) validés sur box réelle.
+## Découvertes techniques J3 (pour J4+)
+
+- `scenarioLog/` est un répertoire (pas un fichier) — un fichier par scénario : `scenario{ID}.log`
+- `scenarioElement` n'a pas de `scenario_id` — lien via `scenario.scenarioElement` (JSON array)
+- Appels de scénarios dans `scenarioExpression.options["scenario_id"]` (pas dans `expression`)
+- Guillemets doubles en SQL MySQL → valeurs string doivent être entre guillemets simples → toujours utiliser `params`
+- 35 eqLogics virtual, 59 eqLogics jMQTT (principalement Zigbee2MQTT) sur la box de réf.
 
 ## Données connues de la box réelle (Jeedom 4.5.3)
 
@@ -61,10 +72,11 @@ Démarrer par la routine de début de session (`docs/state/CONTRIBUTING-CLAUDE-C
 - 58 variables globales dataStore
 - 0 erreur système récente
 - 133 commandes info historisées sans valeur en base (principalement thermostats + météo)
+- 35 eqLogics virtual, 59 eqLogics jMQTT, 36 plugins distincts
 
 ## En attente du PO
 
-- **À J3** : Validation manuelle WF2 (diagnostic scénario) sur box réelle
+Aucune action requise pour démarrer J4.
 
 ---
 
