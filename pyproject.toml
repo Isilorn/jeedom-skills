@@ -9,3 +9,6 @@ readme = "README.md"
 
 # Runtime dependencies are declared per-skill at J1+
 # jeedom-audit/scripts requires: mysql-connector-python, requests
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit"]
