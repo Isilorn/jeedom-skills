@@ -53,7 +53,12 @@ Ces demandes sont **explicites et timées** dans chaque réponse de Claude Code 
 2. Créer une entrée `docs/sessions/YYYY-MM-DD-<sujet>.md` avec les sections définies en §5
 3. Créer les ADR(s) pour les décisions non triviales de la session (cf. critère §6)
 4. Marquer les TODOs traçables dans le code : `# TODO(jalon-JX): <description>`
-5. Commit avec message clair
+5. **Mettre à jour la documentation visible** — exhaustivement, dans cet ordre :
+   - `README.md` : bannière de statut + tableau des jalons
+   - `CHANGELOG.md` : entrée `[X.Y.Z] — YYYY-MM-DD` avec sous-sections Added / Fixed / Validated / Discovered
+   - `jeedom-audit/SKILL.md` : si des workflows, scripts ou comportements ont changé (sections §3, §9, §10 en particulier)
+   - Tout autre fichier de `references/` ou `docs/` rendu inexact par la session
+6. Commit avec message clair
 
 ---
 
