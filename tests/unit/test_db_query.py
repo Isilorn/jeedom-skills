@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).parents[2] / "jeedom-audit" / "scripts"))
 from db_query import _escape_trigger, _substitute_params, run
 
 
-# ── _escape_trigger ────────────────────────────────────────────────────────────
+# ── _escape_trigger (trigger + repeat) ────────────────────────────────────────
 
 class TestEscapeTrigger:
     def test_bare_trigger_gets_backticked(self):
@@ -38,6 +38,23 @@ class TestEscapeTrigger:
     def test_no_trigger_unchanged(self):
         q = "SELECT id, name FROM eqLogic"
         assert _escape_trigger(q) == q
+
+    def test_bare_repeat_gets_backticked(self):
+        # calendar_event.repeat est un mot réservé MariaDB
+        assert _escape_trigger("SELECT repeat FROM calendar_event") == "SELECT `repeat` FROM calendar_event"
+
+    def test_repeat_already_backticked_unchanged(self):
+        q = "SELECT `repeat` FROM calendar_event"
+        assert _escape_trigger(q) == q
+
+    def test_repeat_case_insensitive(self):
+        assert "`REPEAT`" in _escape_trigger("SELECT REPEAT FROM calendar_event")
+
+    def test_trigger_and_repeat_in_same_query(self):
+        q = "SELECT trigger, repeat FROM scenario JOIN calendar_event ON 1=1"
+        result = _escape_trigger(q)
+        assert "`trigger`" in result
+        assert "`repeat`" in result
 
 
 # ── _substitute_params ─────────────────────────────────────────────────────────

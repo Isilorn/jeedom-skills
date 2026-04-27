@@ -19,12 +19,13 @@ from _common import credentials as _creds
 from _common import ssh as _ssh
 from _common import sensitive_fields as _sf
 
-# `trigger` est un mot réservé MySQL — il doit toujours être backtické dans les requêtes.
-_TRIGGER_RE = re.compile(r"\btrigger\b", re.IGNORECASE)
+# Mots réservés MySQL/MariaDB présents comme noms de colonnes dans Jeedom :
+# `trigger` dans scenario.trigger, `repeat` dans calendar_event.repeat.
+_RESERVED_RE = re.compile(r"\b(trigger|repeat)\b", re.IGNORECASE)
 
 
 def _escape_trigger(query: str) -> str:
-    """Ajoute des backticks autour de `trigger` si absent."""
+    """Ajoute des backticks autour des mots réservés MySQL/MariaDB si absent."""
     def replacer(m: re.Match) -> str:
         start = m.start()
         # Déjà entre backticks ?
@@ -32,7 +33,7 @@ def _escape_trigger(query: str) -> str:
             return m.group()
         return f"`{m.group()}`"
 
-    return _TRIGGER_RE.sub(replacer, query)
+    return _RESERVED_RE.sub(replacer, query)
 
 
 def _substitute_params(query: str, params: list) -> str:

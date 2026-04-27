@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 0.5.0 (pré-release J4)
-**Jalon en cours** : J4 terminé — J5 à démarrer
+**Version actuelle** : 0.5.0
+**Jalon en cours** : J5 (en cours) — J5b planifié
 **Dernière session** : 2026-04-27
 
 ---
@@ -30,7 +30,14 @@
 - `references/plugin-alarme.md` rédigé (12 sections, zones, modes, variables spéciales)
 - `references/plugin-thermostat.md` rédigé (11 sections, algorithme temporel, coefficients, logs)
 - `references/plugin-generic-pattern.md` rédigé (4 temps + cas MQTT Manager)
-- `tests/unit/` : 123/123 passants
+- `references/api-jsonrpc.md` rédigé (méthodes autorisées, blacklist, format requête/réponse)
+- `references/api-http.md` rédigé (transport, SSL, auth, test de connectivité)
+- `references/sql-cookbook.md` enrichi §11 (requêtes thermostat / alarme / agenda)
+- `scripts/db_query.py` : auto-escape de `repeat` (mot réservé MariaDB) en plus de `trigger`
+- `jeedom-audit/SKILL.md` : gotchas 6+7 ajoutés, marqueurs ✅ J3 corrigés, §9 index mis à jour
+- `docs/sessions/J5b-cadrage.md` rédigé (brief de démarrage session J5b)
+- `docs/decisions/0017-couche-routage-intelligent.md` rédigé (ADR couche routage)
+- `tests/unit/` : 127/127 passants (4 nouveaux tests `repeat` dans `test_db_query.py`)
 - WF1 validé end-to-end sur box réelle (Jeedom 4.5.3, 177 eqLogics actifs, 57 scénarios actifs)
 - WF2 validé end-to-end sur box réelle (API state+lastLaunch + DB arbre + logs scenarioLog/)
 - WF3 validé end-to-end sur box réelle (Thermostat bureau Géraud — db_query + cmd.value + logs_query)
@@ -41,24 +48,31 @@
 
 ## Ce qui est en cours / en attente
 
-Aucun — J4 fermé proprement.
+Aucun — J5 (volet A) fermé proprement.
 
 ## Décisions ouvertes
 
-Aucune décision ouverte.
+Aucune.
 
 ## Blocages
 
-Aucun blocage technique.
+Aucun.
 
 ## Prochaines étapes
 
-**J5 — à définir avec le PO**
+**J5b — Couche de routage intelligent MySQL/API**
 
-Thèmes candidats (selon PLANNING) :
-- Révision cross-check SKILL.md complet (cohérence §3/§8/§9)
-- Enrichissement `sql-cookbook.md` avec les requêtes thermostat/alarme/agenda découvertes en J4
-- Packaging `.skill` et getting-started
+Brief complet dans `docs/sessions/J5b-cadrage.md`.  
+ADR de décision : `docs/decisions/0017-couche-routage-intelligent.md`.
+
+Livrables J5b :
+- `scripts/_common/router.py` — détection, routage, fallback
+- `tests/unit/test_router.py`
+- Évals 10-12 dans `tests/evals/`
+- Mise à jour `SKILL.md §3`
+- Validation mode API-only sur box réelle (WF5 + WF6)
+
+**Jalon suivant après J5b : J6 (cartographie d'orchestration) ou J7 (release) selon priorité PO.**
 
 **Critère de sortie J4** : ✅ atteint — 6 plugins tier-1 documentés + pattern générique + WF3/WF4 validés.
 

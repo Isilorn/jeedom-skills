@@ -558,12 +558,129 @@ AUDIT_QUERIES = {
 
 ---
 
+---
+
+## 11. Plugins tier-1 — requêtes spécifiques
+
+### Thermostat (`eqType_name = 'thermostat'`)
+
+#### État actuel de tous les thermostats
+```sql
+SELECT e.id, e.name,
+       JSON_UNQUOTE(JSON_EXTRACT(c_order.value,  '$')) AS consigne,
+       JSON_UNQUOTE(JSON_EXTRACT(c_temp.value,   '$')) AS temperature,
+       JSON_UNQUOTE(JSON_EXTRACT(c_mode.value,   '$')) AS mode,
+       JSON_UNQUOTE(JSON_EXTRACT(c_status.value, '$')) AS statut
+FROM eqLogic e
+JOIN cmd c_order  ON c_order.eqLogic_id  = e.id AND c_order.logicalId  = 'order'
+JOIN cmd c_temp   ON c_temp.eqLogic_id   = e.id AND c_temp.logicalId   = 'temperature'
+JOIN cmd c_mode   ON c_mode.eqLogic_id   = e.id AND c_mode.logicalId   = 'mode'
+JOIN cmd c_status ON c_status.eqLogic_id = e.id AND c_status.logicalId = 'status'
+WHERE e.eqType_name = 'thermostat'
+  AND e.isEnable = 1;
+```
+> `cmd.value` est NULL pour la plupart des commandes thermostat — les valeurs runtime sont dans `history`.  
+> Si la requête retourne NULL : utiliser `cmd::getHistory` via API ou interroger la table `history`.
+
+#### Coefficients appris (détection de dérive)
+```sql
+SELECT e.name,
+       JSON_UNQUOTE(JSON_EXTRACT(e.configuration, '$.coeff_indoor_heat'))  AS coeff_interieur,
+       JSON_UNQUOTE(JSON_EXTRACT(e.configuration, '$.coeff_outdoor_heat')) AS coeff_exterieur
+FROM eqLogic e
+WHERE e.eqType_name = 'thermostat'
+ORDER BY CAST(JSON_UNQUOTE(JSON_EXTRACT(e.configuration, '$.coeff_indoor_heat')) AS DECIMAL) DESC;
+```
+
+#### Capteurs de température liés à chaque thermostat
+```sql
+SELECT e.id, e.name,
+       JSON_UNQUOTE(JSON_EXTRACT(e.configuration, '$.temperature_indoor'))  AS capteur_interieur,
+       JSON_UNQUOTE(JSON_EXTRACT(e.configuration, '$.temperature_outdoor')) AS capteur_exterieur
+FROM eqLogic e
+WHERE e.eqType_name = 'thermostat';
+```
+
+---
+
+### Alarme (`eqType_name = 'alarm'`)
+
+#### Alarmes actives et mode courant
+```sql
+SELECT e.id, e.name,
+       JSON_UNQUOTE(JSON_EXTRACT(c.value, '$')) AS mode_actif
+FROM eqLogic e
+JOIN cmd c ON c.eqLogic_id = e.id AND c.logicalId = 'mode'
+WHERE e.eqType_name = 'alarm'
+  AND e.isEnable = 1;
+```
+
+#### Nombre de zones et de modes par alarme
+```sql
+SELECT e.id, e.name,
+       JSON_LENGTH(e.configuration, '$.zones') AS nb_zones,
+       JSON_LENGTH(e.configuration, '$.modes') AS nb_modes
+FROM eqLogic e
+WHERE e.eqType_name = 'alarm';
+```
+
+---
+
+### Agenda (`eqType_name = 'calendar'`)
+
+#### Agendas actifs avec leurs événements en cours
+```sql
+SELECT e.id, e.name, ce.cmd_param
+FROM eqLogic e
+JOIN calendar_event ce ON ce.eqLogic_id = e.id
+WHERE e.eqType_name = 'calendar'
+  AND e.isEnable = 1
+  AND NOW() BETWEEN ce.startDate AND ce.endDate;
+```
+
+#### Agendas désactivés
+```sql
+SELECT id, name
+FROM eqLogic
+WHERE eqType_name = 'calendar'
+  AND isEnable = 0;
+```
+
+#### Événements dont les actions référencent des commandes supprimées
+```sql
+SELECT ce.id, ce.eqLogic_id,
+       JSON_UNQUOTE(JSON_EXTRACT(ce.cmd_param, '$.eventName'))   AS event_name,
+       JSON_UNQUOTE(JSON_EXTRACT(ce.cmd_param, '$.start[0].cmd')) AS start_cmd
+FROM calendar_event ce
+WHERE ce.cmd_param LIKE '%#%';
+```
+*(à croiser avec les IDs de commandes existantes via la table `cmd`)*
+
+#### Tous les événements d'un agenda avec état de récurrence
+```sql
+SELECT ce.id, ce.startDate, ce.endDate,
+       JSON_UNQUOTE(JSON_EXTRACT(ce.cmd_param, '$.eventName'))       AS nom,
+       JSON_UNQUOTE(JSON_EXTRACT(ce.`repeat`, '$.enable'))           AS recurrence_active
+FROM calendar_event ce
+JOIN eqLogic e ON ce.eqLogic_id = e.id
+WHERE e.id = ?
+ORDER BY ce.startDate;
+-- params: [705]
+```
+> **Important :** `repeat` est un mot réservé MariaDB → backtick obligatoire `` `repeat` ``.  
+> Contrairement à `trigger`, `db_query.py` **gère désormais les deux** automatiquement depuis J5.  
+> Écrire sans backticks dans les nouvelles requêtes — le wrapper les ajoute.
+
+---
+
 ## Notes gotchas
 
 | Gotcha | Détail |
 |--------|--------|
 | `trigger` mot réservé | Auto-backtické par `db_query.py` — écrire sans backticks dans les requêtes |
+| `repeat` mot réservé MariaDB | Auto-backtické par `db_query.py` depuis J5 — idem `trigger` |
 | `lastLaunch`, `state` | Absents de la DB → API `scenario::byId` uniquement |
+| `cmd.value` thermostat = NULL | Valeurs runtime dans `history` — utiliser `cmd::getHistory` via API si NULL |
 | `scenarioSubElement.options = []` | Ne signifie pas vide — les vraies expressions sont dans `scenarioExpression` |
 | `scenarioElement` sans FK directe | Les IDs racine sont dans `scenario.scenarioElement` (JSON array) |
 | jMQTT topic | `cmd.configuration.topic` (commande info), `eqLogic.configuration.mqttIncTopic` (broker) |

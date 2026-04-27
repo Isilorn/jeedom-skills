@@ -82,6 +82,12 @@ Une décision mérite une ADR si elle remplit **au moins un** des critères :
 | --- | --- | --- | --- |
 | [0016](0016-tests-via-ssh-par-claude-code.md) | Tests sur box réelle exécutés par Claude Code via SSH | Accepté | 2026-04-27 |
 
+### Décisions d'implémentation (J5b)
+
+| # | Titre | Statut | Date |
+| --- | --- | --- | --- |
+| [0017](0017-couche-routage-intelligent.md) | Couche de routage intelligent MySQL/API — module `router.py` | Accepté | 2026-04-27 |
+
 ---
 
 *D'autres ADRs émergeront au fil du développement (~5-10 supplémentaires d'ici V1.0.0).*
