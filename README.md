@@ -1,7 +1,7 @@
 # jeedom-audit — skill Claude Code
 
-> **🚧 En construction — Jalon J2 terminé (workflows DB + helpers cœur)**
-> La skill `jeedom-audit` n'est pas encore publiée. WF1 (audit général) et WF5 (explication scénario) sont validés sur box réelle. Les workflows avancés (logs, API, plugins) arrivent en J3.
+> **🚧 En construction — Jalon J3 terminé (logs + API + graphe d'usage)**
+> La skill `jeedom-audit` n'est pas encore publiée. WF1, WF2, WF5 et WF6 sont validés sur box réelle. Les plugins tier-1 restants (Agenda, Script) et les workflows WF3/WF4 arrivent en J4.
 > Voir [`docs/PLANNING.md`](docs/PLANNING.md) pour le périmètre complet et le calendrier prévu.
 
 ---
@@ -35,9 +35,9 @@
 | J0 | Bootstrap documentaire | **✅ Terminé** |
 | J1 | Skeleton skill + connexion SSH+MySQL | **✅ Terminé** |
 | J2 | Workflows DB-only + helpers cœur | **✅ Terminé** |
-| J3 | Logs + diagnostic causal | À venir |
-| J4 | Plugins tier-1 | À venir |
-| J5 | API Jeedom | À venir |
+| J3 | Logs + API + graphe d'usage + plugins Virtual/jMQTT | **✅ Terminé** |
+| J4 | Plugins tier-1 restants (Agenda, Script, générique) + WF3/WF4 | En cours |
+| J5 | Orchestration avancée (WF12/13) | À venir |
 | J6 | Orchestration + refactor | À venir |
 | J7 | Recette, doc communautaire, release V1.0.0 | À venir |
 

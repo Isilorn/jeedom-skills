@@ -13,6 +13,36 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [0.4.0] — 2026-04-27
+
+### Added
+
+- `jeedom-audit/scripts/logs_query.py` : tail SSH structuré sur les logs Jeedom — détection automatique du répertoire (`/var/www/html/log/`), support des sous-répertoires (`scenarioLog/scenario{ID}.log`), filtrage grep côté client (sécurité injection shell)
+- `jeedom-audit/scripts/api_call.py` : wrapper JSON-RPC Jeedom — blacklist V1 des méthodes modifiantes (`cmd::execCmd`, `scenario::changeState`, verbes `save/delete/update/...`), retry sur erreur réseau, filtrage `sensitive_fields` à la sortie
+- `jeedom-audit/scripts/usage_graph.py` : graphe d'usage pour `cmd`, `eqLogic` et `scenario` — jointure `scenarioExpression → scenarioSubElement → scenarioElement → scenario`, détection des appels de scénarios via `options["scenario_id"]`, faux positifs blocs PHP signalés
+- `jeedom-audit/references/plugin-virtual.md` : référence plugin Virtuel (9 sections) — patterns commandes info/action, `virtualAction`, `calcul`, requêtes d'audit
+- `jeedom-audit/references/plugin-jmqtt.md` : référence plugin jMQTT (9 sections) — topics MQTT, `jsonPath`, daemon, `availability`, sécurité credentials
+- `tests/unit/test_logs_query.py` : 22 tests (validation nom, résolution chemin, grep, timeout, sous-répertoires)
+- `tests/unit/test_api_call.py` : 27 tests (blacklist, retry, filtrage, erreurs JSON-RPC, transport)
+- `tests/unit/test_usage_graph.py` : 23 tests (cmd/eqLogic/scenario, classification conditions/actions, déduplication)
+- `pyproject.toml` : ajout `[tool.pytest.ini_options]` avec `testpaths = ["tests/unit"]`
+
+### Validated
+
+- WF2 (diagnostic scénario) validé end-to-end sur box réelle — API (`state`+`lastLaunch`) + DB (arbre) + logs (`scenarioLog/`)
+- WF6 (graphe d'usage) validé end-to-end sur box réelle — cmd 15663 → trigger + condition scénario 70
+- Suite de tests complète : 123/123 passants
+
+### Discovered
+
+- `scenarioLog/` est un répertoire (un fichier `scenario{ID}.log` par scénario, pas un fichier unique)
+- `lastLaunch` et `state` sont des champs runtime exposés via l'API uniquement (absents de la table `scenario` en DB)
+- Les appels de scénarios sont dans `scenarioExpression.options["scenario_id"]` (pas dans `expression`)
+
+> Jeedom : testé sur 4.5.3 (MariaDB 10.5, Debian)
+
+---
+
 ## [0.3.0] — 2026-04-27
 
 ### Added
