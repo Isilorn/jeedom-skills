@@ -13,6 +13,29 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [0.3.0] — 2026-04-27
+
+### Added
+
+- `jeedom-audit/references/sql-cookbook.md` : 10 familles de requêtes SQL (audit, plugins, eqLogics, commandes, scénarios, traversée arbre, variables, historique, messages, batch WF1)
+- `jeedom-audit/scripts/resolve_cmd_refs.py` : résolution batch `#ID#` → `#[Objet][Équipement][Commande]#` avec cache de session, tags système préservés, marquage `#ID_NON_RÉSOLU:X#`
+- `jeedom-audit/scripts/scenario_tree_walker.py` : parcours récursif de l'arbre `scenarioElement` (anti-cycle, max_depth=3, troncature au-delà de 100 sous-éléments)
+- `jeedom-audit/references/scenario-grammar.md` : interprétation complète de `scenarioExpression` (10 types d'expressions, pseudo-code WF5, anti-patterns WF7)
+- `jeedom-audit/references/audit-templates.md` : structure des 12 sections du rapport WF1 (audit général)
+- `jeedom-audit/references/health-checks.md` : seuils ✅/⚠️/❌ pour chaque indicateur de santé
+- `tests/unit/test_resolve_cmd_refs.py` : 17 tests (cache, résolution, tags système, IDs non résolus)
+- `tests/unit/test_scenario_tree_walker.py` : 16 tests (récursion, anti-cycle, max_depth, troncature)
+
+### Validated
+
+- WF5 (explication scénario) validé end-to-end sur box réelle — scénario "Présence Géraud Shelly" (id=70)
+- WF1 (audit général) validé end-to-end sur box réelle — Jeedom 4.5.3 (177 eqLogics actifs, 57 scénarios actifs)
+- Suite de tests complète : 51/51 passants
+
+> Jeedom : testé sur 4.5.3 (MariaDB 10.5, Debian)
+
+---
+
 ## [0.2.0] — 2026-04-27
 
 ### Added
