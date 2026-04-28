@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
 **Version actuelle** : 1.0.0
-**Jalon en cours** : J7 terminé — release V1.0.0
+**Jalon en cours** : J7 terminé — recette 8/8 validée, release V1.0.0 en cours de finalisation
 **Dernière session** : 2026-04-28
 
 ---
@@ -34,7 +34,7 @@
 - `references/api-http.md` rédigé (transport, SSL, auth, test de connectivité)
 - `references/sql-cookbook.md` enrichi §11 (requêtes thermostat / alarme / agenda)
 - `scripts/db_query.py` : auto-escape de `repeat` (mot réservé MariaDB) en plus de `trigger`
-- `jeedom-audit/SKILL.md` : gotchas 6+7 ajoutés, marqueurs ✅ J3 corrigés, §9 index mis à jour
+- `jeedom-audit/SKILL.md` : gotchas 1-8 documentés (dont JSON_EXTRACT echo/pipe)
 - `docs/sessions/J5b-cadrage.md` rédigé (brief de démarrage session J5b)
 - `docs/decisions/0017-couche-routage-intelligent.md` rédigé (ADR couche routage)
 - `scripts/_common/router.py` — détection capabilities (lazy+cache), routage par opération, fallback automatique
@@ -47,19 +47,37 @@
 - `tests/evals/eval-014-refactor-wf7.md` — WF7 suggestions refactor
 - `tests/evals/eval-015-lecture-rapide-wf8-11.md` — WF8-11 lecture rapide
 - `tests/unit/` : 191/191 passants
-- WF1 validé end-to-end sur box réelle (Jeedom 4.5.3, 177 eqLogics actifs, 57 scénarios actifs)
-- WF2 validé end-to-end sur box réelle (API state+lastLaunch + DB arbre + logs scenarioLog/)
-- WF3 validé end-to-end sur box réelle (Thermostat bureau Géraud — db_query + cmd.value + logs_query)
-- WF4 validé end-to-end sur box réelle (plugin thermostat — api_call plugin::listPlugin + eqLogics + logs)
-- WF5 validé end-to-end sur box réelle (scénario 70 "Présence Géraud Shelly")
-- WF6 validé end-to-end sur box réelle (cmd 15663 → trigger+condition scénario 70)
-- WF5 + WF6 validés en mode API-only sur box réelle (router.py)
-- WF12 validé sur box réelle — sc13 "Mode_Absent_off" → chaîne 4 appels (sc10, sc8, sc14, sc20), 0 cycle
-- Credentials configurés : user RO `jeedom_audit_ro`, `~/.my.cnf` box, `credentials.json` local (perm 600)
+- CI `.github/workflows/tests.yml` — pytest Python 3.10/3.11/3.12 sur push/PR
+- `.github/ISSUE_TEMPLATE/` — 4 templates (bug, feature, version-divergence, nouveau-plugin-tier1)
+- `.github/PULL_REQUEST_TEMPLATE.md` — checklist PR
+- `build/package_skill.py` — produit `dist/jeedom-audit-vX.Y.Z.skill`
+- `docs/guides/getting-started.md`, `usage.md`, `troubleshooting.md`, `architecture.md`
+- `docs/decisions/0018-release-v1.0.0.md` — ADR bilan release
+- `README.md` finalisé, `CONTRIBUTING.md` complet, `CHANGELOG.md` entrée v1.0.0
+- `pyproject.toml` version 1.0.0
+
+### Recette d'acceptation J7 — 8/8 validés
+
+| # | Cas | Résultat | Durée |
+|---|---|---|---|
+| 01 | Audit général | ✅ PASS | ~2 min |
+| 02 | Explication scénario | ✅ PASS | — |
+| 03 | Diagnostic causal (agendas bureau) | ✅ PASS | ~11 min 41 s |
+| 04 | Graphe d'usage commande | ✅ PASS | — |
+| 05 | Cartographie orchestration mermaid | ✅ PASS | ~3 min |
+| 06 | Audit jMQTT | ✅ PASS | ~4 min |
+| 07 | Refus modification | ✅ PASS | immédiat |
+| 08 | Plugin tier-générique (Discord Link) | ✅ PASS | ~43 s |
+
+### Workflows validés end-to-end sur box réelle
+
+- WF1 (audit général), WF2 (debug scénario), WF3/WF4 (plugin), WF5 (explication), WF6 (usage graph)
+- WF5 + WF6 en mode API-only via router.py
+- WF12 (orchestration mermaid), WF13 (diagnostic causal)
 
 ## Ce qui est en cours / en attente
 
-Aucun — J6 terminé proprement.
+Release V1.0.0 officielle — critère go/no-go restant : 2 utilisateurs externes.
 
 ## Décisions ouvertes
 
@@ -69,19 +87,15 @@ Aucune.
 
 Aucun.
 
-## Prochaines étapes
+## Découvertes techniques (J4-J7)
 
-**Critère de sortie J6** : ✅ atteint — follow_scenario_calls + 191 tests + évals 13-15 + WF12 validé sur box réelle.
-
-**Jalon suivant : J7 (recette finale, doc communautaire, release V1.0.0).**
-
-## Découvertes techniques J4 (pour J5+)
-
-- `calendar_event.repeat` est un mot réservé MariaDB — backtick obligatoire dans les requêtes SQL
-- `eqLogic.configuration` d'un agenda contient des champs thermostat hérités (`heating`, `cooling`, etc.) — vides, héritage de modèle partagé
+- `calendar_event.repeat` est un mot réservé MariaDB — backtick obligatoire
+- `eqLogic.configuration` d'un agenda contient des champs thermostat hérités (vides)
 - `eqType_name = 'alarm'` (sans accent) pour le plugin Alarme
-- `cmd.value` des commandes info thermostat = NULL — valeurs runtime dans `history`, pas dans `cmd`
-- 32 eqLogics calendar (12 actifs), 9 thermostat (9 actifs), 2 alarm (2 actifs), 0 script sur la box de réf.
+- `cmd.value` des commandes info thermostat = NULL — valeurs runtime dans `history`
+- `JSON_EXTRACT` dans une requête passée via `echo '...' | python3` — échappement cassé → utiliser subprocess
+- `usage_graph.py` interface : `{"target_type": "cmd"|"eqLogic"|"scenario", "target_id": <int>}`
+- Claude Code orchestre le setup plus intelligemment que `setup.py` (détection SSH + ~/.my.cnf auto)
 
 ## Données connues de la box réelle (Jeedom 4.5.3)
 
@@ -92,10 +106,6 @@ Aucun.
 - 0 erreur système récente
 - 133 commandes info historisées sans valeur en base (principalement thermostats + météo)
 - 35 eqLogics virtual, 59 eqLogics jMQTT, 32 calendar, 9 thermostat, 2 alarm, 36 plugins distincts
-
-## En attente du PO
-
-Aucune action requise pour démarrer J5.
 
 ---
 
