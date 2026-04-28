@@ -212,6 +212,7 @@ Chaque workflow : déclencheurs → étapes → sortie → scripts.
 **Étapes** : (a) identifier cible (cmd / eqLogic / scénario) ; (b) `usage_graph.py` ; (c) signaler false positifs éventuels
 **Sortie** : sections *Triggers / Conditions / Actions / Plugins consommateurs / Variables dataStore* (sections vides omises)
 **Scripts** : `usage_graph.py`, `resolve_cmd_refs.py`
+**Interface `usage_graph.py`** : `{"target_type": "cmd"|"eqLogic"|"scenario", "target_id": <int>}`
 
 ### WF7 — Suggestions de refactor
 **Déclencheurs** : "comment simplifier", "nettoyer", "améliorer", "factoriser"
