@@ -1,7 +1,7 @@
 # jeedom-audit — skill Claude Code
 
-> **🚧 En construction — Jalon J5b terminé (couche de routage MySQL/API)**
-> La skill `jeedom-audit` n'est pas encore publiée. WF1–WF6 validés sur box réelle, dont WF5+WF6 en mode API-only. Couche de routage transparent (`router.py`) opérationnelle. 177 tests unitaires passants.
+> **🚧 En construction — Jalon J6 terminé (cartographie d'orchestration)**
+> La skill `jeedom-audit` n'est pas encore publiée. WF1–WF6 + WF12 validés sur box réelle. `follow_scenario_calls` opérationnel — chaînes inter-scénarios tracées avec anti-cycle. 191 tests unitaires passants.
 > Voir [`docs/PLANNING.md`](docs/PLANNING.md) pour le périmètre complet et le calendrier prévu.
 
 ---
@@ -39,7 +39,7 @@
 | J4 | Plugins tier-1 (Agenda, Script, Alarme, Thermostat, générique) + WF3/WF4 | **✅ Terminé** |
 | J5 | Refs API JSON-RPC + HTTP, sql-cookbook §11, consolidation doc | **✅ Terminé** |
 | J5b | Couche de routage intelligent MySQL/API (`router.py`) | **✅ Terminé** |
-| J6 | Cartographie d'orchestration (WF12/13) | À venir |
+| J6 | Cartographie d'orchestration (WF12/13) | **✅ Terminé** |
 | J7 | Recette, doc communautaire, release V1.0.0 | À venir |
 
 ## Privacy

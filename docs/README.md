@@ -28,7 +28,7 @@ docs/
 │
 ├── decisions/                   ← AXE 1 : traçabilité (ADRs)
 │   ├── README.md                ← index ADRs + template
-│   └── 0001-*.md … 0015-*.md   ← 15 ADRs initiales V1
+│   └── 0001-*.md … 0017-*.md   ← 17 ADRs V1
 │
 ├── state/                       ← AXE 2 : continuité Claude Code
 │   ├── PROJECT_STATE.md         ← état vivant (mis à jour à chaque session)
