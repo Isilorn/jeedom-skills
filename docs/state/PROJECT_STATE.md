@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 0.5.0
-**Jalon en cours** : J5 (en cours) — J5b planifié
+**Version actuelle** : 0.6.0
+**Jalon en cours** : J5b terminé
 **Dernière session** : 2026-04-27
 
 ---
@@ -37,18 +37,25 @@
 - `jeedom-audit/SKILL.md` : gotchas 6+7 ajoutés, marqueurs ✅ J3 corrigés, §9 index mis à jour
 - `docs/sessions/J5b-cadrage.md` rédigé (brief de démarrage session J5b)
 - `docs/decisions/0017-couche-routage-intelligent.md` rédigé (ADR couche routage)
-- `tests/unit/` : 127/127 passants (4 nouveaux tests `repeat` dans `test_db_query.py`)
+- `scripts/_common/router.py` — détection capabilities (lazy+cache), routage par opération, fallback automatique
+- `jeedom-audit/SKILL.md §3` mis à jour — comportement de routage, tableau preferred_mode, capacités WF
+- `tests/unit/test_router.py` — 50 tests (detect_capabilities, route, with_fallback)
+- `tests/evals/eval-010-api-only-wf5.md` — WF5 en mode API-only
+- `tests/evals/eval-011-fallback-mysql-indisponible.md` — fallback automatique avec mention
+- `tests/evals/eval-012-methode-bloquee.md` — blacklist V1 + réponse utilisateur
+- `tests/unit/` : 177/177 passants
 - WF1 validé end-to-end sur box réelle (Jeedom 4.5.3, 177 eqLogics actifs, 57 scénarios actifs)
 - WF2 validé end-to-end sur box réelle (API state+lastLaunch + DB arbre + logs scenarioLog/)
 - WF3 validé end-to-end sur box réelle (Thermostat bureau Géraud — db_query + cmd.value + logs_query)
 - WF4 validé end-to-end sur box réelle (plugin thermostat — api_call plugin::listPlugin + eqLogics + logs)
 - WF5 validé end-to-end sur box réelle (scénario 70 "Présence Géraud Shelly")
 - WF6 validé end-to-end sur box réelle (cmd 15663 → trigger+condition scénario 70)
+- WF5 + WF6 validés en mode API-only sur box réelle (router.py)
 - Credentials configurés : user RO `jeedom_audit_ro`, `~/.my.cnf` box, `credentials.json` local (perm 600)
 
 ## Ce qui est en cours / en attente
 
-Aucun — J5 (volet A) fermé proprement.
+Aucun — J5b terminé proprement.
 
 ## Décisions ouvertes
 
@@ -60,21 +67,9 @@ Aucun.
 
 ## Prochaines étapes
 
-**J5b — Couche de routage intelligent MySQL/API**
+**Critère de sortie J5b** : ✅ atteint — router.py + 177 tests + évals 10-12 + WF5/WF6 API-only validés.
 
-Brief complet dans `docs/sessions/J5b-cadrage.md`.  
-ADR de décision : `docs/decisions/0017-couche-routage-intelligent.md`.
-
-Livrables J5b :
-- `scripts/_common/router.py` — détection, routage, fallback
-- `tests/unit/test_router.py`
-- Évals 10-12 dans `tests/evals/`
-- Mise à jour `SKILL.md §3`
-- Validation mode API-only sur box réelle (WF5 + WF6)
-
-**Jalon suivant après J5b : J6 (cartographie d'orchestration) ou J7 (release) selon priorité PO.**
-
-**Critère de sortie J4** : ✅ atteint — 6 plugins tier-1 documentés + pattern générique + WF3/WF4 validés.
+**Jalon suivant : J6 (cartographie d'orchestration) ou J7 (release) selon priorité PO.**
 
 ## Découvertes techniques J4 (pour J5+)
 

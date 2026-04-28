@@ -27,6 +27,7 @@ Toute sortie destinée à l'utilisateur utilise des **noms lisibles** (`#[Objet]
 |---|---|
 | SSH + MySQL | Audit structurel, scénarios, commandes, dataStore |
 | API JSON-RPC | Runtime : `lastLaunch`, `state`, `currentValue`, historique |
+| SSH (logs) | Lecture des fichiers de log (`scenarioLog/`, `http.error`, etc.) |
 
 **Configuration requise :**
 - Alias SSH `Jeedom` opérationnel sur la machine locale
@@ -53,6 +54,58 @@ POST http://<ip>/core/api/jeeApi.php
 {"jsonrpc":"2.0","method":"...","params":{"apikey":"..."},"id":1}
 ```
 Voir `references/connection.md` pour le setup complet et la liste des méthodes autorisées.
+
+---
+
+### Routage automatique (router.py)
+
+La skill utilise `scripts/_common/router.py` pour choisir automatiquement le vecteur d'accès selon l'opération. **L'utilisateur ne choisit pas le vecteur** — le routeur décide en interne.
+
+**`preferred_mode` dans `credentials.json` :**
+
+| Valeur | Comportement |
+|---|---|
+| `"auto"` (défaut) | Routeur décide par opération selon les capacités détectées |
+| `"mysql"` | Force MySQL/SSH — API ignorée sauf pour les données runtime-only |
+| `"api"` | Force API — mode API-only pour installations sans SSH |
+
+**Règles de routage par opération (`preferred_mode: "auto"`) :**
+
+| Opération | Préféré | Fallback |
+|---|---|---|
+| Audit structurel (jointures, arbre scénario) | MySQL | API (partiel) |
+| État runtime (`lastLaunch`, `state`, `currentValue`) | API | — |
+| Historique (`cmd::getHistory`) | API | MySQL (`history` table) |
+| Statistiques (`getTendance`) | API | — |
+| Logs | SSH | — |
+| Vérification version | API | MySQL |
+| Liste plugins | API | MySQL (`update` table) |
+| Résolution `#ID#` | MySQL | API (`cmd::byId` en série) |
+
+**Détection des capacités (lazy, mis en cache session) :**
+```python
+from _common.router import detect_capabilities, route, with_fallback
+caps = detect_capabilities(creds)   # {"mysql": bool, "api": bool}
+vector = route("structural_audit", creds)  # "mysql" | "api" | "ssh"
+```
+
+**Comportement sur bascule :**
+- **Silence** si le vecteur préféré répond nominalement
+- **Mention discrète** sur bascule : `"⚠ Données via API (MySQL indisponible)"`
+- **Mention limitation** en mode API-only : `"Mode API-only : logs indisponibles."`
+- **Pas de retry infini** — 1 retry réseau max (`api_call.py`), puis fallback ou erreur explicite
+
+**Capacités WF en mode API-only (`preferred_mode: "api"`) :**
+
+| Workflow | Fonctionne | Limitation |
+|---|---|---|
+| WF1 (audit général) | Partiel | Logs absents |
+| WF2 (diagnostic scénario) | Partiel | Logs indisponibles |
+| WF3 (diagnostic équipement) | Partiel | Logs indisponibles |
+| WF4 (diagnostic plugin) | Oui | — |
+| WF5 (explication scénario) | Oui | — |
+| WF6 (graphe d'usage) | Partiel | Résolution `#ID#` via `cmd::byId` seulement |
+| WF13 (forensique causale) | Non | Logs requis — refus explicite |
 
 ---
 

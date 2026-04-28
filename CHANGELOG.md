@@ -13,6 +13,32 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [0.6.0] — 2026-04-27
+
+Testé sur Jeedom 4.5.3.
+
+### Added
+
+- `jeedom-audit/scripts/_common/router.py` : couche de routage transparent MySQL/API — `detect_capabilities()` (lazy + cache session), `route()` (8 types d'opérations × 3 modes), `with_fallback()` (fallback automatique + mention discrète) ; règles : `preferred_mode` `auto`/`mysql`/`api`, fallback basé sur les capacités détectées, `runtime_state`/`statistics` API-only même en mode `mysql`
+- `tests/unit/test_router.py` : 50 nouveaux tests — detect_capabilities (SSH OK/KO, API OK/KO, exceptions, cache hit, clés distinctes), route × 3 modes (api/mysql/auto) sur toutes les opérations, with_fallback (succès, erreur dict, exception primary, fallback KO, résultats scalaire/liste)
+- `tests/evals/eval-010-api-only-wf5.md` : scénario WF5 en mode `preferred_mode: "api"` — WF5 complet via `scenario::byId` + `cmd::byId`, mention mode API-only
+- `tests/evals/eval-011-fallback-mysql-indisponible.md` : fallback automatique MySQL → API — MySQL KO, `with_fallback` déclenché, mention `"⚠ Données via API (MySQL indisponible)"`
+- `tests/evals/eval-012-methode-bloquee.md` : blacklist V1 — `cmd::execCmd` bloqué avant envoi réseau, réponse utilisateur avec pas-à-pas UI, tableau des verbes bloqués
+- `jeedom-audit/SKILL.md §3` : section routage automatique ajoutée — tableau `preferred_mode`, règles par opération, comportement sur bascule (silence/mention/refus), capacités WF en mode API-only
+
+### Fixed
+
+- Aucun
+
+### Validated (box réelle)
+
+- `router.detect_capabilities` : MySQL=True, API=True sur Jeedom 4.5.3
+- WF5 mode API-only : `scenario::byId` scénario 70 "Présence Géraud Shelly" — state=stop, lastLaunch OK
+- WF6 mode API-only : `cmd::byId` cmd 15663 — currentValue=1 OK
+- `with_fallback` : MySQL KO simulé → fallback API → mention correcte
+
+---
+
 ## [0.5.1] — 2026-04-27
 
 Testé sur Jeedom 4.5.3.
