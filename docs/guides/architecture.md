@@ -133,10 +133,10 @@ Les 17 ADRs dans `docs/decisions/` documentent toutes les décisions structurant
 | ADR | Décision |
 |---|---|
 | [0001](../decisions/0001-skill-vs-slash-command.md) | Skill (pas slash-command) |
-| [0005](../decisions/0005-acces-mysql-ssh-prefere.md) | SSH+MySQL préféré, API secondaire |
+| [0005](../decisions/0005-mode-acces-mysql-vs-api.md) | SSH+MySQL préféré, API secondaire |
 | [0006](../decisions/0006-lecture-seule-absolue.md) | Lecture seule absolue V1 |
 | [0007](../decisions/0007-13-intentions-5-familles.md) | 13 intentions dans 5 familles |
-| [0009](../decisions/0009-plugins-tier-1.md) | 6 plugins tier-1 + tier-générique |
+| [0009](../decisions/0009-couverture-plugins-tier-1.md) | 6 plugins tier-1 + tier-générique |
 | [0017](../decisions/0017-couche-routage-intelligent.md) | Routage transparent MySQL/API |
 
 ---

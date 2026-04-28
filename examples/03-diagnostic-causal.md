@@ -1,11 +1,11 @@
 ---
 id: accept-03
-titre: Diagnostic causal — agendas bureau actifs simultanément
+titre: Forensique causale — agendas bureau actifs simultanément
 workflow: WF13 + WF5 + WF12
 statut: ✅ validé
 ---
 
-# Cas d'acceptation 03 — Diagnostic causal (WF13)
+# Cas d'acceptation 03 — Forensique causale (WF13)
 
 ## Prompt utilisateur
 

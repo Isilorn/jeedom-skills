@@ -105,6 +105,9 @@ vector = route("structural_audit", creds)  # "mysql" | "api" | "ssh"
 | WF4 (diagnostic plugin) | Oui | — |
 | WF5 (explication scénario) | Oui | — |
 | WF6 (graphe d'usage) | Partiel | Résolution `#ID#` via `cmd::byId` seulement |
+| WF7 (suggestions refactor) | Oui | — |
+| WF8-11 (lectures rapides) | Oui | Logs indisponibles pour WF8 |
+| WF12 (orchestration) | Oui | — |
 | WF13 (forensique causale) | Non | Logs requis — refus explicite |
 
 ---
@@ -266,36 +269,34 @@ Chaque `plugin-X.md` indique la version testée. Signaler si la version install�
 
 ## 9. Index des références
 
-| Fichier | Contenu | Statut |
-|---|---|---|
-| `references/connection.md` | Setup credentials, SSH, MySQL user RO, sécurité | ✅ J1 |
-| `references/sql-cookbook.md` | Requêtes par famille : audit, scénarios, équipements, commandes, dataStore, historique | ✅ J2 |
-| `references/audit-templates.md` | Templates de rapport WF1 (12 sections fixes) + WF7 (refactor) + WF12 (orchestration prose/mermaid) | ✅ J6 |
-| `references/health-checks.md` | Critères de santé : seuils, indicateurs, anomalies | ✅ J2 |
-| `references/scenario-grammar.md` | Interprétation `scenarioExpression` : types, subtypes, options | ✅ J2 |
-| `references/plugin-virtual.md` | Plugin Virtual : eqLogic, cmd, configuration JSON | ✅ J3 |
-| `references/plugin-jmqtt.md` | Plugin jMQTT : broker, eqpt, commandes, topics | ✅ J3 |
-| `references/plugin-agenda.md` | Plugin Agenda (`calendar`) : `calendar_event`, récurrence, commandes | ✅ J4 |
-| `references/plugin-script.md` | Plugin Script : syntaxes, chemins, sécurité credentials | ✅ J4 |
-| `references/plugin-alarme.md` | Plugin Alarme (`alarm`) : zones, modes, triggers, variables spéciales | ✅ J4 |
-| `references/plugin-thermostat.md` | Plugin Thermostat : algorithme temporel, modes, coefficients, logs | ✅ J4 |
-| `references/plugin-generic-pattern.md` | Pattern d'inspection générique (tous autres plugins, incl. MQTT Manager) | ✅ J4 |
-| `references/api-jsonrpc.md` | API JSON-RPC : méthodes autorisées, blacklist, format requête/réponse | ✅ J5 |
-| `references/api-http.md` | Connexion HTTP : SSL, auth, test de connectivité | ✅ J5 |
-| `scripts/_common/credentials.py` | Lecture `credentials.json`, override env `JEEDOM_*` | ✅ J1 |
-| `scripts/_common/ssh.py` | Wrapper SSH unifié (timeout, retries, stderr) | ✅ J1 |
-| `scripts/_common/version_check.py` | Détection et politique de version | ✅ J1 |
-| `scripts/_common/tags.py` | Tags système Jeedom à préserver intacts | ✅ J1 |
-| `scripts/_common/sensitive_fields.py` | Filtrage champs sensibles à la sortie | ✅ J1 |
-| `scripts/db_query.py` | Wrapper SQL générique (stdin JSON → stdout JSON) | ✅ J1 |
-| `scripts/api_call.py` | Wrapper JSON-RPC (blacklist + retry + filtrage) | ✅ J3 |
-| `scripts/logs_query.py` | Tail SSH structuré sur logs Jeedom | ✅ J3 |
-| `scripts/resolve_cmd_refs.py` | Résolution `#ID#` → `#[O][E][C]#` en batch | ✅ J2 |
-| `scripts/scenario_tree_walker.py` | Parcours récursif scénario (anti-cycle, max_depth, follow_scenario_calls inter-scénarios) | ✅ J6 |
-| `scripts/usage_graph.py` | Graphe d'usage agrégé par cible | ✅ J3 |
-| `scripts/_common/router.py` | Routage transparent MySQL/API (detect_capabilities, route, with_fallback) | ✅ J5b |
-
-> **Note de maintenance :** les colonnes `Statut` et les marqueurs `✅ Jx` / `🔄 Jx` sont retirés à la release V1.0.0 (J7) — tous les fichiers seront alors présents et le tableau redevient une simple liste de références.
+| Fichier | Contenu |
+|---|---|
+| `references/connection.md` | Setup credentials, SSH, MySQL user RO, sécurité |
+| `references/sql-cookbook.md` | Requêtes par famille : audit, scénarios, équipements, commandes, dataStore, historique |
+| `references/audit-templates.md` | Templates de rapport WF1 (12 sections fixes) + WF7 (refactor) + WF12 (orchestration prose/mermaid) |
+| `references/health-checks.md` | Critères de santé : seuils, indicateurs, anomalies |
+| `references/scenario-grammar.md` | Interprétation `scenarioExpression` : types, subtypes, options |
+| `references/plugin-virtual.md` | Plugin Virtual : eqLogic, cmd, configuration JSON |
+| `references/plugin-jmqtt.md` | Plugin jMQTT : broker, eqpt, commandes, topics |
+| `references/plugin-agenda.md` | Plugin Agenda (`calendar`) : `calendar_event`, récurrence, commandes |
+| `references/plugin-script.md` | Plugin Script : syntaxes, chemins, sécurité credentials |
+| `references/plugin-alarme.md` | Plugin Alarme (`alarm`) : zones, modes, triggers, variables spéciales |
+| `references/plugin-thermostat.md` | Plugin Thermostat : algorithme temporel, modes, coefficients, logs |
+| `references/plugin-generic-pattern.md` | Pattern d'inspection générique (tous autres plugins, incl. MQTT Manager) |
+| `references/api-jsonrpc.md` | API JSON-RPC : méthodes autorisées, blacklist, format requête/réponse |
+| `references/api-http.md` | Connexion HTTP : SSL, auth, test de connectivité |
+| `scripts/_common/credentials.py` | Lecture `credentials.json`, override env `JEEDOM_*` |
+| `scripts/_common/ssh.py` | Wrapper SSH unifié (timeout, retries, stderr) |
+| `scripts/_common/version_check.py` | Détection et politique de version |
+| `scripts/_common/tags.py` | Tags système Jeedom à préserver intacts |
+| `scripts/_common/sensitive_fields.py` | Filtrage champs sensibles à la sortie |
+| `scripts/db_query.py` | Wrapper SQL générique (stdin JSON → stdout JSON) |
+| `scripts/api_call.py` | Wrapper JSON-RPC (blacklist + retry + filtrage) |
+| `scripts/logs_query.py` | Tail SSH structuré sur logs Jeedom |
+| `scripts/resolve_cmd_refs.py` | Résolution `#ID#` → `#[O][E][C]#` en batch |
+| `scripts/scenario_tree_walker.py` | Parcours récursif scénario (anti-cycle, max_depth, follow_scenario_calls inter-scénarios) |
+| `scripts/usage_graph.py` | Graphe d'usage agrégé par cible |
+| `scripts/_common/router.py` | Routage transparent MySQL/API (detect_capabilities, route, with_fallback) |
 
 ---
 

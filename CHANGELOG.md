@@ -40,7 +40,7 @@ Testé sur Jeedom 4.5.3 (MariaDB 10.5, Debian).
 
 ### Validated (box réelle)
 
-- 7/8 cas d'acceptation validés sur Jeedom 4.5.3 (cas 03 — diagnostic causal — en attente de matière PO)
+- 8/8 cas d'acceptation validés sur Jeedom 4.5.3 (dont cas 03 — forensique causale — agendas bureau)
 - Tous les workflows WF1–WF6 + WF12 validés en SSH+MySQL
 - WF5 + WF6 validés en mode API-only (router.py)
 

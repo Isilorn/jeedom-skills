@@ -11,7 +11,7 @@ Ces 8 cas valident la skill `jeedom-audit` avant la release `v1.0.0`.
 |---|---|---|---|
 | [01](01-audit-general.md) | Audit général de santé | WF1 | ✅ validé |
 | [02](02-explication-scenario.md) | Explication scénario complexe | WF5 | ✅ validé |
-| [03](03-diagnostic-causal.md) | Diagnostic causal | WF13 | ✅ validé |
+| [03](03-diagnostic-causal.md) | Forensique causale | WF13 | ✅ validé |
 | [04](04-graphe-usage.md) | Graphe d'usage d'une commande | WF6 | ✅ validé |
 | [05](05-cartographie-orchestration.md) | Cartographie d'orchestration | WF12 | ✅ validé |
 | [06](06-audit-jmqtt.md) | Audit plugin jMQTT | WF3/WF4 | ✅ validé |
