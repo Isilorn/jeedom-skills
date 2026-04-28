@@ -64,7 +64,12 @@ L'assistant `setup` demande :
 - L'URL de l'API Jeedom (ex. `http://192.168.1.10`)
 - La clé API (optionnel si SSH+MySQL disponible)
 
-Les credentials sont stockés localement dans `~/.config/jeedom-audit/credentials.json` (jamais transmis à Anthropic).
+Les credentials sont stockés localement (jamais transmis à Anthropic) :
+
+- macOS/Linux : `~/.config/jeedom-audit/credentials.json`
+- Windows : `C:\Users\<vous>\.config\jeedom-audit\credentials.json`
+
+> **Windows** : la skill requiert OpenSSH (inclus dans Windows 10 1809+ et Windows 11) ou WSL. Les commandes SSH du guide supposent un terminal Unix-compatible (PowerShell ou WSL).
 
 ---
 
@@ -119,6 +124,23 @@ Zéro télémétrie par défaut. Aucune donnée de votre installation n'est tran
 ## Contribuer
 
 Retours, bugs et propositions de nouveaux plugins bienvenus — voir [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Roadmap
+
+### V1.1 — correctifs + retours communauté
+
+- Fixtures DB synthétiques pour tests sans box réelle
+- Support Jeedom 4.4.x (divergences de schéma à documenter)
+
+### V2
+
+- Nouveaux plugins tier-1 (Zigbee2MQTT natif, Z-Wave JS, Philips Hue...)
+- Tests d'intégration automatisés
+- Opérations API réversibles (write-once, avec confirmation explicite)
+
+Voir le [CHANGELOG](CHANGELOG.md) pour le détail des versions.
 
 ---
 

@@ -60,31 +60,33 @@ Host Jeedom
 
 Testez : `ssh Jeedom "echo ok"` — doit répondre `ok` sans mot de passe.
 
-### 3b. Créer un utilisateur MySQL en lecture seule
+### 3b. Accès MySQL — `setup.py` s'en charge
 
-Sur votre box Jeedom (via SSH) :
+L'assistant `setup.py` (étape 4 ci-dessous) guide la création du user MySQL read-only **et** crée `~/.my.cnf` sur la box via SSH automatiquement. Vous n'avez rien à faire manuellement.
 
-```sql
--- En tant que root MySQL
-CREATE USER 'jeedom_audit_ro'@'localhost' IDENTIFIED BY 'mot_de_passe_fort';
-GRANT SELECT ON jeedom.* TO 'jeedom_audit_ro'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-Puis créez `~/.my.cnf` sur la box (dans le home de votre user SSH, pas `/root/`) :
-
-```ini
-[client]
-user=jeedom_audit_ro
-password=mot_de_passe_fort
-database=jeedom
-```
-
-```bash
-chmod 600 ~/.my.cnf
-```
-
-<!-- Capture : ~/.my.cnf correctement configuré — à fournir par le PO -->
+> **Si vous préférez tout préparer à la main** (optionnel) :
+>
+> ```sql
+> -- Sur la box, en tant que root MySQL
+> CREATE USER 'jeedom_audit_ro'@'localhost' IDENTIFIED BY 'mot_de_passe_fort';
+> GRANT SELECT ON jeedom.* TO 'jeedom_audit_ro'@'localhost';
+> FLUSH PRIVILEGES;
+> ```
+>
+> Puis dans `~/.my.cnf` sur la box (home de votre user SSH, pas `/root/`) :
+>
+> ```ini
+> [client]
+> user=jeedom_audit_ro
+> password=mot_de_passe_fort
+> host=localhost
+> ```
+>
+> ```bash
+> chmod 600 ~/.my.cnf
+> ```
+>
+> `setup.py` détectera le fichier existant et ne vous demandera pas le mot de passe.
 
 ---
 
@@ -94,13 +96,20 @@ Dans Claude Code, démarrez une nouvelle conversation et tapez :
 
 > "Configure jeedom-audit pour ma box"
 
-La skill lance l'assistant interactif `setup.py` qui demande :
+La skill lance l'assistant interactif `setup.py` qui :
 
-1. L'alias SSH (ex. `Jeedom`)
-2. L'URL de l'API Jeedom (ex. `http://192.168.1.10`)
-3. La clé API (trouvable dans Jeedom : Réglages → Système → Configuration → API)
+1. Vérifie la connexion SSH (`ssh Jeedom "echo ok"`)
+2. Détecte ou crée le user MySQL read-only et `~/.my.cnf` sur la box
+3. Détecte ou demande l'URL et la clé API Jeedom
+4. Teste la connexion end-to-end
 
-Les credentials sont sauvegardés dans `~/.config/jeedom-audit/credentials.json` (permissions 600).
+Les credentials sont sauvegardés localement (jamais transmis à Anthropic) :
+
+- macOS/Linux : `~/.config/jeedom-audit/credentials.json`
+- Windows : `C:\Users\<vous>\.config\jeedom-audit\credentials.json`
+
+> **Windows** : requiert OpenSSH (inclus dans Windows 10 1809+ et Windows 11) ou WSL.
+> La commande `ssh` doit être accessible depuis votre terminal (PowerShell ou WSL).
 
 <!-- Capture : assistant setup en cours — à fournir par le PO -->
 
