@@ -1,0 +1,46 @@
+name: Divergence de version Jeedom
+description: La skill se comporte différemment sur votre version de Jeedom.
+labels: ["version-compat"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        jeedom-audit V1 cible Jeedom **4.5.x**. Les divergences sur d'autres versions sont documentées pour orienter les futures décisions de compatibilité.
+
+  - type: input
+    id: jeedom-version
+    attributes:
+      label: Version Jeedom exacte
+      placeholder: "ex. 4.4.8"
+    validations:
+      required: true
+
+  - type: input
+    id: mariadb-version
+    attributes:
+      label: Version MariaDB / MySQL
+      placeholder: "ex. MariaDB 10.6"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Comportement observé
+      description: Ce que la skill produit sur votre version.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu (Jeedom 4.5 de référence)
+    validations:
+      required: true
+
+  - type: textarea
+    id: proof
+    attributes:
+      label: Preuve de test
+      description: Logs, capture, ou extrait de réponse Claude.
+      render: text
+    validations:
+      required: true

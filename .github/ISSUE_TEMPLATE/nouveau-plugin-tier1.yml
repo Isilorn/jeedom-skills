@@ -1,0 +1,51 @@
+name: Nouveau plugin tier-1
+description: Proposer la couverture documentaire complète d'un plugin Jeedom.
+labels: ["plugin-tier1", "documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Un plugin tier-1 requiert une fiche `references/plugin-<nom>.md` en 9 sections (voir PLANNING §3.7), une fixture sanitisée et une validation sur box réelle.
+        Lisez [CONTRIBUTING.md](../../CONTRIBUTING.md) avant de soumettre.
+
+  - type: input
+    id: plugin-name
+    attributes:
+      label: Nom du plugin
+      placeholder: "ex. Philips Hue"
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-id
+    attributes:
+      label: Identifiant plugin (eqType_name en DB)
+      placeholder: "ex. PhilipsHue"
+    validations:
+      required: true
+
+  - type: input
+    id: jeedom-version
+    attributes:
+      label: Version Jeedom testée
+      placeholder: "ex. 4.5.3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Pourquoi ce plugin mérite un support tier-1 ?
+      description: Popularité communautaire, complexité d'audit, cas d'usage fréquents.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist du contributeur
+      options:
+        - label: Fiche `plugin-<nom>.md` rédigée en 9 sections (spec PLANNING §3.7)
+        - label: Fixture sanitisée fournie dans `tests/fixtures/`
+        - label: Version Jeedom documentée
+        - label: Tests unitaires ajoutés si nouveau code Python

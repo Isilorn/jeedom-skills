@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 0.7.0
-**Jalon en cours** : J6 terminé
+**Version actuelle** : 1.0.0
+**Jalon en cours** : J7 terminé — release V1.0.0
 **Dernière session** : 2026-04-28
 
 ---
@@ -13,7 +13,7 @@
 - `scripts/_common/` : `credentials.py`, `ssh.py`, `tags.py`, `sensitive_fields.py`, `version_check.py`
 - `scripts/db_query.py` opérationnel — testé sur box réelle (217 eqLogics, 62 scénarios, 6219 commandes)
 - `scripts/setup.py` interactif fonctionnel
-- `scripts/resolve_cmd_refs.py` — résolution batch #ID# → #[O][E][C]# avec cache de session (17/17 tests)
+- `scripts/resolve_cmd_refs.py` — résolution batch `#ID#` → `#[O][E][C]#` avec cache de session (17/17 tests)
 - `scripts/scenario_tree_walker.py` — parcours récursif anti-cycle, max_depth, troncature >100, **follow_scenario_calls** inter-scénarios avec anti-cycle (30/30 tests)
 - `scripts/logs_query.py` — tail SSH structuré, détection auto répertoire, support sous-dossiers (22/22 tests)
 - `scripts/api_call.py` — wrapper JSON-RPC, blacklist V1, retry, filtrage sensible (27/27 tests)

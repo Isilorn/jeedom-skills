@@ -13,6 +13,39 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [1.0.0] — 2026-04-28
+
+Testé sur Jeedom 4.5.3 (MariaDB 10.5, Debian).
+
+**Première release publique.** Skill `jeedom-audit` complète — 13 workflows, 6 plugins tier-1, 191 tests unitaires, 8 cas d'acceptation validés.
+
+### Added
+
+- `examples/` : 8 cas d'acceptation V1 (recette go/no-go release) — audit général, explication scénario, diagnostic causal, graphe d'usage, cartographie orchestration, audit jMQTT, refus modification, plugin tier-générique
+- `docs/guides/getting-started.md` : tutoriel pas-à-pas de l'installation jusqu'au premier audit (15 min)
+- `docs/guides/usage.md` : référence complète des 13 workflows avec exemples de phrases et formats de sortie
+- `docs/guides/troubleshooting.md` : FAQ — connexion SSH, MySQL, mode API-only, erreurs courantes
+- `docs/guides/architecture.md` : vue aérienne de la skill (scripts, routage, SKILL.md, stratégie de tests)
+- `.github/workflows/tests.yml` : CI pytest sur Python 3.10/3.11/3.12 (push + PR sur `main`)
+- `.github/ISSUE_TEMPLATE/` : 4 templates (bug, feature, divergence de version, nouveau plugin tier-1)
+- `.github/PULL_REQUEST_TEMPLATE.md` : checklist contributeur
+- `build/package_skill.py` : script de packaging — produit `jeedom-audit-vX.Y.Z.skill` depuis `jeedom-audit/`
+- `docs/decisions/0018-release-v1.0.0.md` : ADR de release — bilan des écarts PLANNING/livraison
+- `CONTRIBUTING.md` finalisé : critères d'acceptation PR, conventions de code, sanitisation fixtures, roadmap contributions
+
+### Changed
+
+- `README.md` : finalisé pour visiteur 30s — installation, configuration, exemples de phrases, limites V1
+- `CONTRIBUTING.md` : squelette J0 → guide complet avec templates, critères et roadmap
+
+### Validated (box réelle)
+
+- 7/8 cas d'acceptation validés sur Jeedom 4.5.3 (cas 03 — diagnostic causal — en attente de matière PO)
+- Tous les workflows WF1–WF6 + WF12 validés en SSH+MySQL
+- WF5 + WF6 validés en mode API-only (router.py)
+
+---
+
 ## [0.7.0] — 2026-04-28
 
 Testé sur Jeedom 4.5.3.

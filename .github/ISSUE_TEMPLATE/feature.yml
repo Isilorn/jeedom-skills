@@ -1,0 +1,36 @@
+name: Feature — suggestion de fonctionnalité
+description: Proposer une nouvelle intention, un nouveau workflow ou une amélioration.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Les contributions de code sont ouvertes depuis V1.0.0. Lisez d'abord [CONTRIBUTING.md](../../CONTRIBUTING.md).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Quel problème cette feature résoudrait-elle ?
+      description: Décrivez la situation concrète qui vous a amené à cette demande.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution proposée
+      description: Décrivez ce que vous aimeriez voir dans la skill.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives envisagées
+      description: Y a-t-il d'autres façons d'atteindre le même résultat ?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexte additionnel
+      description: Captures d'écran, liens, exemples de prompt, etc.

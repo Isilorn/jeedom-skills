@@ -1,0 +1,49 @@
+name: Bug — comportement inattendu
+description: La skill produit un résultat incorrect, plante ou refuse à tort.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de renseigner tous les champs pour accélérer le diagnostic.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Que s'est-il passé ?
+      description: Description du comportement observé vs. attendu.
+    validations:
+      required: true
+
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt exact envoyé à Claude
+      description: Copiez le message que vous avez envoyé.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexte de l'installation
+      description: |
+        - Version Jeedom (ex. 4.5.3)
+        - Mode d'accès utilisé : SSH+MySQL / API / les deux
+        - Plugins impliqués (si pertinent)
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs ou message d'erreur
+      render: text
