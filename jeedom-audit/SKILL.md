@@ -267,7 +267,7 @@ Chaque `plugin-X.md` indique la version testée. Signaler si la version install�
 |---|---|---|
 | `references/connection.md` | Setup credentials, SSH, MySQL user RO, sécurité | ✅ J1 |
 | `references/sql-cookbook.md` | Requêtes par famille : audit, scénarios, équipements, commandes, dataStore, historique | ✅ J2 |
-| `references/audit-templates.md` | Templates de rapport WF1 (12 sections fixes) | ✅ J2 |
+| `references/audit-templates.md` | Templates de rapport WF1 (12 sections fixes) + WF7 (refactor) + WF12 (orchestration prose/mermaid) | ✅ J6 |
 | `references/health-checks.md` | Critères de santé : seuils, indicateurs, anomalies | ✅ J2 |
 | `references/scenario-grammar.md` | Interprétation `scenarioExpression` : types, subtypes, options | ✅ J2 |
 | `references/plugin-virtual.md` | Plugin Virtual : eqLogic, cmd, configuration JSON | ✅ J3 |
@@ -288,8 +288,9 @@ Chaque `plugin-X.md` indique la version testée. Signaler si la version install�
 | `scripts/api_call.py` | Wrapper JSON-RPC (blacklist + retry + filtrage) | ✅ J3 |
 | `scripts/logs_query.py` | Tail SSH structuré sur logs Jeedom | ✅ J3 |
 | `scripts/resolve_cmd_refs.py` | Résolution `#ID#` → `#[O][E][C]#` en batch | ✅ J2 |
-| `scripts/scenario_tree_walker.py` | Parcours récursif scénario (anti-cycle, max_depth) | ✅ J2 |
+| `scripts/scenario_tree_walker.py` | Parcours récursif scénario (anti-cycle, max_depth, follow_scenario_calls inter-scénarios) | ✅ J6 |
 | `scripts/usage_graph.py` | Graphe d'usage agrégé par cible | ✅ J3 |
+| `scripts/_common/router.py` | Routage transparent MySQL/API (detect_capabilities, route, with_fallback) | ✅ J5b |
 
 > **Note de maintenance :** les colonnes `Statut` et les marqueurs `✅ Jx` / `🔄 Jx` sont retirés à la release V1.0.0 (J7) — tous les fichiers seront alors présents et le tableau redevient une simple liste de références.
 

@@ -13,6 +13,35 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [0.7.0] — 2026-04-28
+
+Testé sur Jeedom 4.5.3.
+
+### Added
+
+- `jeedom-audit/scripts/scenario_tree_walker.py` : paramètre `follow_scenario_calls` (int) — suit les appels inter-scénarios (`action=start`) en profondeur décrémentale ; anti-cycle via `visited_scenarios` partagé entre tous les `walk()` récursifs ; chaque expression est enrichie d'une clé `called_scenario_tree` ; `_extract_scenario_call_id()` distingue `action=start` des autres (stop/activate/deactivate ignorés)
+- `tests/unit/test_scenario_tree_walker.py` : 14 nouveaux tests — follow un niveau, décrémentation profondeur, anti-cycle direct, anti-cycle indirect A→B→A, scénario appelé introuvable, multi-appels dans le même bloc, follow_0 identique au défaut ; + 6 tests helper `_extract_scenario_call_id` (start, stop, type non action, condition, options invalides, scenario_id absent) — 30 tests au total (vs 16 en J2)
+- `jeedom-audit/references/audit-templates.md` : template WF7 (suggestions de refactor — grille d'anti-patterns, structure *Constat/Impact/Pas-à-pas UI/Vérification*) et template WF12 (cartographie d'orchestration — prose ≤10 nœuds, mermaid `graph TD` >10 nœuds, conventions nœuds/arêtes)
+- `tests/evals/eval-013-orchestration-mermaid-wf12.md` : WF12 orchestration mermaid — validé sur box réelle (sc13 "Mode_Absent_off" → 4 appels suivis, 0 cycle, 0 warning)
+- `tests/evals/eval-014-refactor-wf7.md` : WF7 refactor verbal — anti-patterns, pas-à-pas UI, cas "aucun anti-pattern"
+- `tests/evals/eval-015-lecture-rapide-wf8-11.md` : WF8-11 lecture rapide — 4 cas (valeur courante, historique, variable dataStore, recherche)
+
+### Fixed
+
+- Aucun
+
+### Validated (box réelle)
+
+- WF12 mode MySQL : `scenario_tree_walker.py` `follow_scenario_calls=3` sur sc13 "Mode_Absent_off" → chaîne sc10 (Mode_Normal_on), sc8 (Mode_Vacances_on), sc14 (Invites), sc20 (Centre de notifications) — 0 warning, anti-cycle correct
+- Chaîne d'orchestration la plus riche sur la box : scénario 20 "Centre de notifications" appelé par 56 expressions réparties dans l'installation
+
+### Discovered
+
+- `JSON_TABLE` non disponible sur MariaDB 10.5 — utiliser `JSON_UNQUOTE(JSON_EXTRACT(...))` pour les requêtes sur colonnes JSON
+- La box de référence n'a pas de chaîne >10 nœuds-scénario (max 5) — la règle prose/mermaid sera validée sur box communautaire plus complexe
+
+---
+
 ## [0.6.0] — 2026-04-27
 
 Testé sur Jeedom 4.5.3.
