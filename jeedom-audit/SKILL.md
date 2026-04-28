@@ -171,6 +171,8 @@ update                          ← versions plugins installées
 
 7. **`cmd.value` = NULL pour les thermostats.** Les valeurs runtime (consigne, température mesurée, mode) ne sont pas dans `cmd.value` mais dans `history`. Si `cmd.value` retourne NULL sur un thermostat : utiliser `cmd::getHistory` via API ou interroger la table `history`.
 
+8. **`JSON_EXTRACT` dans une requête passée via `echo '...' | python3` échoue.** Les guillemets et accolades imbriqués cassent l'échappement shell. Symptôme : `JSONDecodeError` ou requête tronquée. Contournement : passer la requête SQL via `subprocess.run(['python3', 'scripts/db_query.py'], input=json.dumps(...))` en Python, ou via un fichier temporaire. Ne pas utiliser `echo '{"query": "...JSON_EXTRACT..."}' | python3` pour des requêtes complexes.
+
 ---
 
 ## 7. Cas d'usage et workflows
