@@ -8,17 +8,42 @@
 
 ## Aperçu en 30 secondes
 
-> *"Fais-moi un audit général de mon Jeedom"*
+> *"fais un audit général de mon Jeedom"*
 
-Claude Code inspecte votre installation et produit un rapport structuré : inventaire complet, points d'attention, état des plugins, commandes problématiques — en lisant directement la base MariaDB ou l'API Jeedom.
+```
+⚠️ Quelques points à surveiller — installation fonctionnelle, aucune erreur système.
 
-<!-- Capture : écran d'audit en cours dans Claude Code — à fournir par le PO -->
+┌──────────────────────────────────────────────┬────────────────────┐
+│                  Indicateur                  │       Valeur       │
+├──────────────────────────────────────────────┼────────────────────┤
+│ Équipements actifs                           │ 177 / 217 (81,5 %) │
+│ Scénarios actifs                             │ 57 / 62 (92 %) ✅  │
+│ Commandes sans Type Générique                │ 4 869              │
+│ Erreurs système                              │ 0 ✅               │
+│ Variables orphelines                         │ 14                 │
+└──────────────────────────────────────────────┴────────────────────┘
 
-> *"Explique-moi ce que fait le scénario Présence Géraud étape par étape"*
+🔴 Urgent — Investiguer NbFailRAID = 15 949
+   UI : Outils → Scénarios → chercher "RAID" → vérifier les logs
 
-Claude Code lit le scénario, résout toutes les références `#[Objet][Équipement][Commande]#` et produit un pseudo-code lisible par un non-développeur.
+🟡 À faire — Vérifier les trackers Tile (3 équipements sans historique)
+🟢 Optionnel — Supprimer les agendas désactivés (200+ commandes inutiles)
+```
 
-<!-- Capture : exemple de pseudo-code de scénario — à fournir par le PO -->
+> *"explique-moi ce que fait le scénario Présence Alice"*
+
+```
+### Scénario — Présence Alice (id: 70)
+Déclencheurs : #[Présence][Alice Shelly][Présence]# change
+
+SI #[Présence][Alice Shelly][Présence]# == 1 ALORS
+  → Action : #[Chauffage][Bureau][On]#
+  → Scénario : Mode_Présence_on (immédiat)
+SINON
+  → Attendre 5 min
+  → SI #[Présence][Alice Shelly][Présence]# == 0 ALORS
+      → Scénario : Mode_Absent_on (immédiat)
+```
 
 ---
 

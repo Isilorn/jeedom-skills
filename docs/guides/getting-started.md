@@ -94,14 +94,45 @@ L'assistant `setup.py` (étape 4 ci-dessous) guide la création du user MySQL re
 
 Dans Claude Code, démarrez une nouvelle conversation et tapez :
 
-> "Configure jeedom-audit pour ma box"
+> "configure jeedom-audit pour ma box"
 
-La skill lance l'assistant interactif `setup.py` qui :
+Claude orchestre la configuration directement, sans script interactif :
 
-1. Vérifie la connexion SSH (`ssh Jeedom "echo ok"`)
-2. Détecte ou crée le user MySQL read-only et `~/.my.cnf` sur la box
-3. Détecte ou demande l'URL et la clé API Jeedom
-4. Teste la connexion end-to-end
+```
+⏺ Skill(jeedom-audit) — Successfully loaded skill
+
+⏺ Bash(ssh -o ConnectTimeout=5 Jeedom "echo ok")
+  ⎿  ok
+
+⏺ Bash(ssh Jeedom "test -f ~/.my.cnf && echo EXISTS || echo ABSENT; \
+       mysql jeedom -e 'SELECT COUNT(*) FROM eqLogic;'")
+  ⎿  EXISTS
+     COUNT(*)
+     217
+
+⏺ Bash(ssh Jeedom "php -r \"...config::byKey('internalAddr');\"")
+  ⎿  192.168.1.10
+
+⏺ [test API → pong]
+
+⏺ Write(~/.config/jeedom-audit/credentials.json)  → perm 600
+
+⏺ [test db_query.py → 217 eqLogics]
+
+┌──────────────────┬────────┬──────────────────────────────────────────┐
+│    Composant     │ Statut │                  Détail                  │
+├──────────────────┼────────┼──────────────────────────────────────────┤
+│ SSH Jeedom       │ ✅     │ jeedom.local                             │
+│ MySQL            │ ✅     │ user jeedom_audit_ro, 217 eqLogics       │
+│ API JSON-RPC     │ ✅     │ http://192.168.1.10 — pong               │
+│ credentials.json │ ✅     │ ~/.config/jeedom-audit/… (perm 600)      │
+│ db_query.py      │ ✅     │ retourne 217 eqLogics                    │
+└──────────────────┴────────┴──────────────────────────────────────────┘
+La skill jeedom-audit est prête.
+```
+
+Claude détecte automatiquement l'alias SSH, `~/.my.cnf`, l'URL et la clé API Jeedom
+via PHP, crée `credentials.json` et vérifie la connexion end-to-end.
 
 Les credentials sont sauvegardés localement (jamais transmis à Anthropic) :
 
@@ -109,9 +140,9 @@ Les credentials sont sauvegardés localement (jamais transmis à Anthropic) :
 - Windows : `C:\Users\<vous>\.config\jeedom-audit\credentials.json`
 
 > **Windows** : requiert OpenSSH (inclus dans Windows 10 1809+ et Windows 11) ou WSL.
-> La commande `ssh` doit être accessible depuis votre terminal (PowerShell ou WSL).
 
-<!-- Capture : assistant setup en cours — à fournir par le PO -->
+**Si la configuration automatique échoue** (SSH inaccessible, `~/.my.cnf` absent) :
+lancez `python3 scripts/setup.py` depuis `~/.claude/skills/jeedom-audit/` pour un assistant interactif pas-à-pas.
 
 ---
 
@@ -119,12 +150,12 @@ Les credentials sont sauvegardés localement (jamais transmis à Anthropic) :
 
 Tapez simplement :
 
-> "Fais un audit général de mon Jeedom"
+> "fais un audit général de mon Jeedom"
 
 Claude Code va :
 
-1. Vérifier la connexion à votre box
-2. Collecter les données (inventaire, plugins, scénarios, commandes problématiques)
+1. Charger les références d'audit (`audit-templates.md`, `health-checks.md`, `sql-cookbook.md`)
+2. Lancer un batch de requêtes SQL + API (inventaire, plugins, scénarios, variables, messages, historique)
 3. Produire un rapport structuré avec les points d'attention
 
 <!-- Capture : rapport d'audit complet — à fournir par le PO -->
