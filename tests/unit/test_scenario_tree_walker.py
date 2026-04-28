@@ -263,3 +263,233 @@ class TestHelpers:
         grouped = stw._group_by_element(rows)
         sub_ids = [s["sub_id"] for s in grouped[8]]
         assert sub_ids == [12, 13, 14]
+
+    def test_extract_scenario_call_id_returns_id_for_start(self):
+        expr = {"type": "action", "expression": "scenario", "options": '{"scenario_id": "5", "action": "start"}'}
+        assert stw._extract_scenario_call_id(expr) == 5
+
+    def test_extract_scenario_call_id_ignores_stop(self):
+        expr = {"type": "action", "expression": "scenario", "options": '{"scenario_id": "5", "action": "stop"}'}
+        assert stw._extract_scenario_call_id(expr) is None
+
+    def test_extract_scenario_call_id_ignores_non_scenario_action(self):
+        expr = {"type": "action", "expression": "#15670#", "options": "{}"}
+        assert stw._extract_scenario_call_id(expr) is None
+
+    def test_extract_scenario_call_id_ignores_condition_type(self):
+        expr = {"type": "condition", "expression": "scenario", "options": '{"scenario_id": "5"}'}
+        assert stw._extract_scenario_call_id(expr) is None
+
+    def test_extract_scenario_call_id_handles_invalid_options(self):
+        expr = {"type": "action", "expression": "scenario", "options": "not_json"}
+        assert stw._extract_scenario_call_id(expr) is None
+
+    def test_extract_scenario_call_id_handles_missing_scenario_id(self):
+        expr = {"type": "action", "expression": "scenario", "options": '{"action": "start"}'}
+        assert stw._extract_scenario_call_id(expr) is None
+
+
+# ── follow_scenario_calls ──────────────────────────────────────────────────────
+
+def _scenario_call_expr_row(element_id, sub_id, expr_id, called_scenario_id, order=1):
+    """Expression de type action/scenario (appel de scénario)."""
+    opts = json.dumps({"scenario_id": str(called_scenario_id), "action": "start"})
+    return _expr_row(element_id, sub_id, "if", "then", expr_id, order, "action", "scenario", opts)
+
+
+class TestFollowScenarioCalls:
+    """Tests du mode follow_scenario_calls."""
+
+    def _make_simple_subtree_rows(self, element_id=20, sub_id=30):
+        """Arbre minimal pour le scénario appelé."""
+        return [_expr_row(element_id, sub_id, "if", "condition", 99, 1, "condition", "#ID# == 1")]
+
+    def test_follow_disabled_by_default(self):
+        """Sans follow_scenario_calls, les appels de scénario ne sont pas suivis."""
+        rows = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=5)]
+
+        with patch("scenario_tree_walker._fetch_scenario", return_value=_scenario_row(element_ids=[8])), \
+             patch("scenario_tree_walker._fetch_elements", return_value=rows):
+            result = stw.walk(70, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        assert "called_scenario_tree" not in scenario_expr
+
+    def test_follow_one_level_embeds_subtree(self):
+        """follow_scenario_calls=1 : l'appel de scénario est résolu et embarqué."""
+        parent_rows = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=5)]
+        child_scenario = _scenario_row(scenario_id=5, element_ids=[20])
+        child_tree_rows = self._make_simple_subtree_rows()
+
+        def fetch_scenario_side(scenario_id, creds):
+            if scenario_id == 70:
+                return _scenario_row(element_ids=[8])
+            if scenario_id == 5:
+                return child_scenario
+            return None
+
+        def fetch_elements_side(element_ids, creds):
+            if set(element_ids) == {8}:
+                return parent_rows
+            if set(element_ids) == {20}:
+                return child_tree_rows
+            return []
+
+        with patch("scenario_tree_walker._fetch_scenario", side_effect=fetch_scenario_side), \
+             patch("scenario_tree_walker._fetch_elements", side_effect=fetch_elements_side):
+            result = stw.walk(70, follow_scenario_calls=1, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        assert "called_scenario_tree" in scenario_expr
+        subtree = scenario_expr["called_scenario_tree"]
+        assert subtree["scenario"]["id"] == 5
+        assert len(subtree["tree"]) == 1
+
+    def test_follow_depth_decrements(self):
+        """follow_scenario_calls=1 → le scénario appelé ne suit pas ses propres appels."""
+        parent_rows = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=5)]
+        child_rows = self._make_simple_subtree_rows() + [_scenario_call_expr_row(20, 30, 60, called_scenario_id=7)]
+
+        def fetch_scenario_side(scenario_id, creds):
+            if scenario_id == 70:
+                return _scenario_row(element_ids=[8])
+            if scenario_id == 5:
+                return _scenario_row(scenario_id=5, element_ids=[20])
+            return None
+
+        def fetch_elements_side(element_ids, creds):
+            if set(element_ids) == {8}:
+                return parent_rows
+            if set(element_ids) == {20}:
+                return child_rows
+            return []
+
+        with patch("scenario_tree_walker._fetch_scenario", side_effect=fetch_scenario_side), \
+             patch("scenario_tree_walker._fetch_elements", side_effect=fetch_elements_side):
+            result = stw.walk(70, follow_scenario_calls=1, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        child_subtree = scenario_expr["called_scenario_tree"]
+        # Le scénario 5 a un appel vers 7, mais follow=0 pour lui → pas embarqué
+        child_then = next(s for s in child_subtree["tree"][0]["sub_elements"] if s["sub_id"] == 30)
+        inner_expr = next(e for e in child_then["expressions"] if e["expression"] == "scenario")
+        assert "called_scenario_tree" not in inner_expr
+
+    def test_anti_cycle_direct(self):
+        """Un scénario qui s'appelle lui-même ne boucle pas."""
+        rows = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=70)]
+
+        with patch("scenario_tree_walker._fetch_scenario", return_value=_scenario_row(element_ids=[8])), \
+             patch("scenario_tree_walker._fetch_elements", return_value=rows):
+            result = stw.walk(70, follow_scenario_calls=3, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        assert "called_scenario_tree" in scenario_expr
+        assert "warning" in scenario_expr["called_scenario_tree"]
+        assert "cycle" in scenario_expr["called_scenario_tree"]["warning"]
+
+    def test_anti_cycle_indirect(self):
+        """Cycle indirect A→B→A détecté correctement."""
+        rows_a = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=5)]
+        rows_b = [
+            _expr_row(20, 30, "if", "condition", 70, 1, "condition", "#X# == 1"),
+            _scenario_call_expr_row(20, 31, 71, called_scenario_id=70),  # B→A (cycle)
+        ]
+
+        def fetch_scenario_side(scenario_id, creds):
+            if scenario_id == 70:
+                return _scenario_row(element_ids=[8])
+            if scenario_id == 5:
+                return _scenario_row(scenario_id=5, element_ids=[20])
+            return None
+
+        def fetch_elements_side(element_ids, creds):
+            if set(element_ids) == {8}:
+                return rows_a
+            if set(element_ids) == {20}:
+                return rows_b
+            return []
+
+        with patch("scenario_tree_walker._fetch_scenario", side_effect=fetch_scenario_side), \
+             patch("scenario_tree_walker._fetch_elements", side_effect=fetch_elements_side):
+            result = stw.walk(70, follow_scenario_calls=3, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        child_subtree = scenario_expr["called_scenario_tree"]
+        child_then = next(s for s in child_subtree["tree"][0]["sub_elements"] if s["sub_id"] == 31)
+        back_expr = next(e for e in child_then["expressions"] if e["expression"] == "scenario")
+        assert "called_scenario_tree" in back_expr
+        assert "warning" in back_expr["called_scenario_tree"]
+        assert "cycle" in back_expr["called_scenario_tree"]["warning"]
+
+    def test_called_scenario_not_found_returns_error(self):
+        """Scénario appelé introuvable → erreur embarquée dans called_scenario_tree."""
+        rows = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=999)]
+
+        def fetch_scenario_side(scenario_id, creds):
+            if scenario_id == 70:
+                return _scenario_row(element_ids=[8])
+            return None  # 999 introuvable
+
+        with patch("scenario_tree_walker._fetch_scenario", side_effect=fetch_scenario_side), \
+             patch("scenario_tree_walker._fetch_elements", return_value=rows):
+            result = stw.walk(70, follow_scenario_calls=1, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        assert "error" in scenario_expr["called_scenario_tree"]
+
+    def test_multiple_scenario_calls_in_same_block(self):
+        """Plusieurs appels dans le même bloc sont tous suivis."""
+        call_rows = [
+            _scenario_call_expr_row(8, 13, 50, called_scenario_id=5, order=1),
+            _scenario_call_expr_row(8, 13, 51, called_scenario_id=6, order=2),
+        ]
+        rows_root = [_expr_row(8, 12, "if", "condition", 1, 1, "condition", "#X# == 1")] + call_rows
+        rows_child5 = [_expr_row(20, 99, "if", "condition", 88, 1, "condition", "#Y# == 1")]
+        rows_child6 = [_expr_row(21, 98, "if", "condition", 87, 1, "condition", "#Z# == 1")]
+
+        def fetch_scenario_side(scenario_id, creds):
+            if scenario_id == 70:
+                return _scenario_row(scenario_id=70, element_ids=[8])
+            if scenario_id == 5:
+                return _scenario_row(scenario_id=5, element_ids=[20])
+            if scenario_id == 6:
+                return _scenario_row(scenario_id=6, element_ids=[21])
+            return None
+
+        def fetch_elements_side(element_ids, creds):
+            if set(element_ids) == {8}:
+                return rows_root
+            if set(element_ids) == {20}:
+                return rows_child5
+            if set(element_ids) == {21}:
+                return rows_child6
+            return []
+
+        with patch("scenario_tree_walker._fetch_scenario", side_effect=fetch_scenario_side), \
+             patch("scenario_tree_walker._fetch_elements", side_effect=fetch_elements_side):
+            result = stw.walk(70, follow_scenario_calls=1, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        call_exprs = [e for e in then_sub["expressions"] if e["expression"] == "scenario"]
+        assert all("called_scenario_tree" in e for e in call_exprs)
+        called_ids = {e["called_scenario_tree"]["scenario"]["id"] for e in call_exprs}
+        assert called_ids == {5, 6}
+
+    def test_follow_zero_is_same_as_disabled(self):
+        """follow_scenario_calls=0 est identique au comportement par défaut."""
+        rows = SIMPLE_TREE_ROWS + [_scenario_call_expr_row(8, 13, 50, called_scenario_id=5)]
+
+        with patch("scenario_tree_walker._fetch_scenario", return_value=_scenario_row(element_ids=[8])), \
+             patch("scenario_tree_walker._fetch_elements", return_value=rows):
+            result = stw.walk(70, follow_scenario_calls=0, creds=MOCK_CREDS)
+
+        then_sub = next(s for s in result["tree"][0]["sub_elements"] if s["sub_id"] == 13)
+        scenario_expr = next(e for e in then_sub["expressions"] if e["expression"] == "scenario")
+        assert "called_scenario_tree" not in scenario_expr

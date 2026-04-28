@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Parcours récursif d'un scénario Jeedom.
 
-Entrée (stdin) : {"scenario_id": 70, "max_depth": 3, "follow_scenario_calls": false}
+Entrée (stdin) : {
+    "scenario_id": 70,
+    "max_depth": 3,
+    "follow_scenario_calls": 2
+}
 Sortie (stdout): {
     "scenario": {id, name, isActive, mode, trigger},
     "tree": [<node>, ...],
@@ -26,8 +30,15 @@ Un nœud (node) :
         ]
     }
 
+Quand follow_scenario_calls > 0, les expressions de type action/scenario sont enrichies :
+    {
+        "expr_id": 6, "type": "action", "expression": "scenario",
+        "options": "{\"scenario_id\": \"5\", \"action\": \"start\"}",
+        "called_scenario_tree": { <résultat walk() sur scénario 5> }
+    }
+
 Usage :
-    echo '{"scenario_id": 70}' | python3 scripts/scenario_tree_walker.py
+    echo '{"scenario_id": 70, "follow_scenario_calls": 2}' | python3 scripts/scenario_tree_walker.py
 """
 
 import json
@@ -132,6 +143,24 @@ def _child_element_ids(element_rows: list[dict]) -> list[int]:
     return children
 
 
+def _extract_scenario_call_id(expr: dict) -> int | None:
+    """Retourne l'ID du scénario appelé si l'expression est un appel de scénario, sinon None.
+
+    Détection : type="action", expression="scenario", options.scenario_id présent.
+    Seul action="start" est suivi (stop/activate/deactivate n'appellent pas réellement).
+    """
+    if expr.get("type") != "action" or expr.get("expression") != "scenario":
+        return None
+    try:
+        opts = json.loads(expr.get("options") or "{}")
+        if opts.get("action") not in ("start", None, ""):
+            return None
+        sid = opts.get("scenario_id")
+        return int(sid) if sid is not None else None
+    except (json.JSONDecodeError, ValueError, TypeError):
+        return None
+
+
 def _walk(
     root_ids: list[int],
     creds: dict,
@@ -140,6 +169,8 @@ def _walk(
     depth: int,
     warnings: list[str],
     truncated_flag: list[bool],
+    follow_scenario_calls: int = 0,
+    visited_scenarios: set[int] | None = None,
 ) -> list[dict]:
     """Parcours récursif : retourne la liste des nœuds à ce niveau."""
     if depth > max_depth:
@@ -172,6 +203,29 @@ def _walk(
         ]
         child_ids = _child_element_ids(all_expr_rows)
 
+        # Suivre les appels de scénarios si demandé
+        if follow_scenario_calls > 0:
+            if visited_scenarios is None:
+                visited_scenarios = set()
+            for sub in sub_elements:
+                for expr in sub["expressions"]:
+                    called_id = _extract_scenario_call_id(expr)
+                    if called_id is None:
+                        continue
+                    if called_id in visited_scenarios:
+                        expr["called_scenario_tree"] = {
+                            "warning": f"Scénario {called_id} déjà visité — cycle ignoré"
+                        }
+                        continue
+                    visited_scenarios.add(called_id)
+                    expr["called_scenario_tree"] = walk(
+                        called_id,
+                        max_depth=max_depth,
+                        creds=creds,
+                        follow_scenario_calls=follow_scenario_calls - 1,
+                        _visited_scenarios=visited_scenarios,
+                    )
+
         node: dict = {
             "element_id": el_id,
             "depth": depth,
@@ -179,7 +233,12 @@ def _walk(
         }
 
         if child_ids:
-            children = _walk(child_ids, creds, max_depth, visited, depth + 1, warnings, truncated_flag)
+            children = _walk(
+                child_ids, creds, max_depth, visited, depth + 1,
+                warnings, truncated_flag,
+                follow_scenario_calls=follow_scenario_calls,
+                visited_scenarios=visited_scenarios,
+            )
             if children:
                 node["children"] = children
 
@@ -188,16 +247,29 @@ def _walk(
     return nodes
 
 
-def walk(scenario_id: int, max_depth: int = DEFAULT_MAX_DEPTH, creds: dict | None = None) -> dict:
+def walk(
+    scenario_id: int,
+    max_depth: int = DEFAULT_MAX_DEPTH,
+    creds: dict | None = None,
+    follow_scenario_calls: int = 0,
+    _visited_scenarios: set[int] | None = None,
+) -> dict:
     """Parcourt le scénario et retourne l'arbre structuré.
 
     Args:
-        scenario_id : ID du scénario Jeedom
-        max_depth   : profondeur max de récursion (défaut 3)
-        creds       : credentials (chargés depuis fichier si None)
+        scenario_id            : ID du scénario Jeedom
+        max_depth              : profondeur max de récursion des éléments (défaut 3)
+        creds                  : credentials (chargés depuis fichier si None)
+        follow_scenario_calls  : niveaux de suivi des appels inter-scénarios (0 = désactivé)
+        _visited_scenarios     : usage interne — anti-cycle inter-scénarios
     """
     if creds is None:
         creds = _creds.load()
+
+    if _visited_scenarios is None:
+        _visited_scenarios = {scenario_id}
+    else:
+        _visited_scenarios.add(scenario_id)
 
     scenario = _fetch_scenario(scenario_id, creds)
     if scenario is None:
@@ -228,6 +300,8 @@ def walk(scenario_id: int, max_depth: int = DEFAULT_MAX_DEPTH, creds: dict | Non
         depth=0,
         warnings=warnings,
         truncated_flag=truncated_flag,
+        follow_scenario_calls=follow_scenario_calls,
+        visited_scenarios=_visited_scenarios,
     )
 
     return {
@@ -263,7 +337,11 @@ def main() -> None:
         sys.exit(1)
 
     max_depth = payload.get("max_depth", DEFAULT_MAX_DEPTH)
-    result = walk(scenario_id, max_depth=max_depth)
+    follow_scenario_calls = payload.get("follow_scenario_calls", 0)
+    if not isinstance(follow_scenario_calls, int) or follow_scenario_calls < 0:
+        follow_scenario_calls = 0
+
+    result = walk(scenario_id, max_depth=max_depth, follow_scenario_calls=follow_scenario_calls)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

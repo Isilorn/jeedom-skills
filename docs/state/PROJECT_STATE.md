@@ -1,8 +1,8 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 0.6.0
-**Jalon en cours** : J5b terminé
-**Dernière session** : 2026-04-27
+**Version actuelle** : 0.7.0
+**Jalon en cours** : J6 terminé
+**Dernière session** : 2026-04-28
 
 ---
 
@@ -14,14 +14,14 @@
 - `scripts/db_query.py` opérationnel — testé sur box réelle (217 eqLogics, 62 scénarios, 6219 commandes)
 - `scripts/setup.py` interactif fonctionnel
 - `scripts/resolve_cmd_refs.py` — résolution batch #ID# → #[O][E][C]# avec cache de session (17/17 tests)
-- `scripts/scenario_tree_walker.py` — parcours récursif anti-cycle, max_depth, troncature >100 (16/16 tests)
+- `scripts/scenario_tree_walker.py` — parcours récursif anti-cycle, max_depth, troncature >100, **follow_scenario_calls** inter-scénarios avec anti-cycle (30/30 tests)
 - `scripts/logs_query.py` — tail SSH structuré, détection auto répertoire, support sous-dossiers (22/22 tests)
 - `scripts/api_call.py` — wrapper JSON-RPC, blacklist V1, retry, filtrage sensible (27/27 tests)
 - `scripts/usage_graph.py` — graphe d'usage cmd/eqLogic/scénario, jointure 4-tables (23/23 tests)
 - `references/connection.md` rédigé
 - `references/sql-cookbook.md` rédigé (10 familles, ~200 lignes)
 - `references/scenario-grammar.md` rédigé (types/subtypes/options, pseudo-code WF5)
-- `references/audit-templates.md` rédigé (12 sections fixes WF1)
+- `references/audit-templates.md` rédigé (12 sections fixes WF1 + templates WF7 refactor + WF12 orchestration)
 - `references/health-checks.md` rédigé (seuils ✅/⚠️/❌)
 - `references/plugin-virtual.md` rédigé (9 sections, patterns commandes, requêtes d'audit)
 - `references/plugin-jmqtt.md` rédigé (9 sections, topics MQTT, jsonPath, daemon)
@@ -43,7 +43,10 @@
 - `tests/evals/eval-010-api-only-wf5.md` — WF5 en mode API-only
 - `tests/evals/eval-011-fallback-mysql-indisponible.md` — fallback automatique avec mention
 - `tests/evals/eval-012-methode-bloquee.md` — blacklist V1 + réponse utilisateur
-- `tests/unit/` : 177/177 passants
+- `tests/evals/eval-013-orchestration-mermaid-wf12.md` — WF12 orchestration mermaid
+- `tests/evals/eval-014-refactor-wf7.md` — WF7 suggestions refactor
+- `tests/evals/eval-015-lecture-rapide-wf8-11.md` — WF8-11 lecture rapide
+- `tests/unit/` : 191/191 passants
 - WF1 validé end-to-end sur box réelle (Jeedom 4.5.3, 177 eqLogics actifs, 57 scénarios actifs)
 - WF2 validé end-to-end sur box réelle (API state+lastLaunch + DB arbre + logs scenarioLog/)
 - WF3 validé end-to-end sur box réelle (Thermostat bureau Géraud — db_query + cmd.value + logs_query)
@@ -51,11 +54,12 @@
 - WF5 validé end-to-end sur box réelle (scénario 70 "Présence Géraud Shelly")
 - WF6 validé end-to-end sur box réelle (cmd 15663 → trigger+condition scénario 70)
 - WF5 + WF6 validés en mode API-only sur box réelle (router.py)
+- WF12 validé sur box réelle — sc13 "Mode_Absent_off" → chaîne 4 appels (sc10, sc8, sc14, sc20), 0 cycle
 - Credentials configurés : user RO `jeedom_audit_ro`, `~/.my.cnf` box, `credentials.json` local (perm 600)
 
 ## Ce qui est en cours / en attente
 
-Aucun — J5b terminé proprement.
+Aucun — J6 terminé proprement.
 
 ## Décisions ouvertes
 
@@ -67,9 +71,9 @@ Aucun.
 
 ## Prochaines étapes
 
-**Critère de sortie J5b** : ✅ atteint — router.py + 177 tests + évals 10-12 + WF5/WF6 API-only validés.
+**Critère de sortie J6** : ✅ atteint — follow_scenario_calls + 191 tests + évals 13-15 + WF12 validé sur box réelle.
 
-**Jalon suivant : J6 (cartographie d'orchestration) ou J7 (release) selon priorité PO.**
+**Jalon suivant : J7 (recette finale, doc communautaire, release V1.0.0).**
 
 ## Découvertes techniques J4 (pour J5+)
 

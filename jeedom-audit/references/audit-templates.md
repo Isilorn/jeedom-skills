@@ -227,3 +227,119 @@ Priorisées par impact/effort :
 
 [sections §2 à §12 selon pertinence]
 ```
+
+---
+
+## Template WF7 — Suggestions de refactor
+
+> **Usage :** ce template structure la réponse pour WF7.  
+> Déclencheurs : "comment simplifier", "améliorer", "nettoyer", "factoriser".  
+> Toujours lecture seule — pas de SQL modificateur, pas de script généré.
+
+### En-tête
+
+```
+## Suggestions de refactor — [Nom ou périmètre cible]
+
+> Analyse basée sur : [audit WF1 / diagnostic WF2 / explication WF5 / etc.]  
+> [N] suggestion(s) identifiée(s), classées par impact décroissant.
+```
+
+### Structure d'une suggestion
+
+```
+### Suggestion [N] — [Titre court]
+
+**Constat :** [Ce qui est observé — fait factuel, sans jugement.]
+
+**Impact :** [Pourquoi c'est un problème — maintenabilité, fiabilité, performance, lisibilité.]
+
+**Pas-à-pas UI :**
+1. Aller dans Outils → Scénarios → [nom du scénario]
+2. [étapes UI précises]
+3. Sauvegarder
+
+**Vérification :** [Comment confirmer que le changement a eu l'effet voulu — log attendu, valeur de commande, comportement observable.]
+```
+
+### Anti-patterns à détecter (ordre de priorité)
+
+| Anti-pattern | Signal SQL / structurel |
+|---|---|
+| Conditions dupliquées | Même expression dans plusieurs blocs IF du même scénario |
+| Délais en dur | `action=wait` avec valeur fixe non paramétrable |
+| `triggerId()` déprécié | Expression contenant `triggerId()` |
+| Commande sans Type Générique | `cmd.generic_type IS NULL` ou vide |
+| Scénario désactivé référencé | Appel vers scénario avec `isActive=0` |
+| Variable globale orpheline | `dataStore` jamais lue dans aucun scénario |
+| Scénario en mode "provoke" sans trigger | `mode='provoke'` et `trigger='[]'` |
+
+---
+
+## Template WF12 — Cartographie d'orchestration
+
+> **Usage :** ce template structure la réponse pour WF12.  
+> Déclencheurs : "trace la chaîne d'appels", "montre le flux complet quand X", "qui appelle qui".  
+> Sortie adaptative : prose si ≤10 nœuds, mermaid `graph TD` si >10 nœuds.
+
+### En-tête commun
+
+```
+## Cartographie d'orchestration — [Point d'entrée]
+
+> Point d'entrée : [scénario "Nom" (ID N) / commande [O][E][C] / événement]  
+> Profondeur explorée : [N] niveau(x) — [N] scénario(s) au total
+```
+
+### Sortie prose (≤10 nœuds)
+
+```
+**[Scénario racine "Nom" — ID N]**  
+Mode : [provoke/scheduled/etc.] | Déclencheur : [trigger]
+
+  → SI [condition] :
+      → Action : [commande ou appel]
+      → Appelle **"Scénario enfant A" (ID M)**
+          → SI [condition enfant] :
+              → Action : [commande]
+          → Appelle **"Scénario petit-enfant B" (ID P)**
+              [tronqué — profondeur max atteinte]
+
+  → SINON :
+      → Action : [commande]
+```
+
+### Sortie mermaid (>10 nœuds)
+
+````
+```mermaid
+graph TD
+    S70["🎬 Présence Géraud\nmode: provoke"]
+    S70 -->|"#15663# == 1"| S12["Arrivée maison"]
+    S70 -->|"#15663# == 0"| S15["Départ maison"]
+    S12 --> C101["[Salon][Lumière][ON]"]
+    S12 --> S22["Scénario chauffage"]
+    S15 --> C102["[Salon][Lumière][OFF]"]
+    S15 --> C103["[Alarme][Armement][ON]"]
+    S22 --> C104["[Thermostat bureau][Consigne][21]"]
+```
+````
+
+**Convention nœuds mermaid :**
+
+| Type | Format label | Icône |
+|---|---|---|
+| Scénario | `SN["🎬 Nom\nmode: X"]` | 🎬 |
+| Commande action | `CN["[O][E][C]"]` | aucune |
+| Point d'entrée externe (trigger cmd) | `TN["⚡ [O][E][C]"]` | ⚡ |
+| Nœud tronqué | `XN["… (tronqué)"]` | … |
+
+**Arêtes :** libellé = condition SI présente, absent si action inconditionnelle.
+
+### Pied de page commun
+
+```
+> **Limite :** profondeur max [N] — appels au-delà non explorés.  
+> **Cycles détectés :** [aucun / liste des boucles ignorées].  
+> Pour explorer un sous-arbre spécifique, demandez : "détaille le scénario X".
+```
