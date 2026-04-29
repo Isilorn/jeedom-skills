@@ -41,7 +41,7 @@ ORDER BY `key`;
 ### Liste complète avec version et état
 ```sql
 SELECT id, name, version, isEnable, state
-FROM update
+FROM `update`
 WHERE type = 'plugin'
 ORDER BY name;
 ```
@@ -49,7 +49,7 @@ ORDER BY name;
 ### Plugins avec mises à jour disponibles
 ```sql
 SELECT id, name, version, status
-FROM update
+FROM `update`
 WHERE type = 'plugin' AND status != 'ok'
 ORDER BY name;
 ```
@@ -57,7 +57,7 @@ ORDER BY name;
 ### Plugins actifs seulement
 ```sql
 SELECT id, name, version
-FROM update
+FROM `update`
 WHERE type = 'plugin' AND isEnable = 1
 ORDER BY name;
 ```
@@ -520,7 +520,7 @@ Chaque requête peut être exécutée indépendamment via `db_query.run()`.
 ```python
 AUDIT_QUERIES = {
     "version": "SELECT value FROM config WHERE `key` = 'version' AND plugin = 'core'",
-    "plugins": "SELECT id, name, version, isEnable, state FROM update WHERE type = 'plugin' ORDER BY name",
+    "plugins": "SELECT id, name, version, isEnable, state FROM `update` WHERE type = 'plugin' ORDER BY name",
     "eqlogic_count": "SELECT COUNT(*) AS total, SUM(isEnable=1) AS actifs FROM eqLogic",
     "scenario_count": "SELECT COUNT(*) AS total, SUM(isActive=1) AS actifs FROM scenario",
     "cmd_count": "SELECT COUNT(*) AS total FROM cmd",
@@ -550,7 +550,7 @@ AUDIT_QUERIES = {
     """,
     "updates_available": """
         SELECT id, name, version, status
-        FROM update WHERE type = 'plugin' AND status != 'ok'
+        FROM `update` WHERE type = 'plugin' AND status != 'ok'
         ORDER BY name
     """,
 }

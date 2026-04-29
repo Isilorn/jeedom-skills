@@ -19,9 +19,10 @@ from _common import credentials as _creds
 from _common import ssh as _ssh
 from _common import sensitive_fields as _sf
 
-# Mots réservés MySQL/MariaDB présents comme noms de colonnes dans Jeedom :
-# `trigger` dans scenario.trigger, `repeat` dans calendar_event.repeat.
-_RESERVED_RE = re.compile(r"\b(trigger|repeat)\b", re.IGNORECASE)
+# Mots réservés MySQL/MariaDB présents comme noms de colonnes/tables dans Jeedom :
+# `trigger` dans scenario.trigger, `repeat` dans calendar_event.repeat,
+# `update` comme nom de table (table des versions plugins/core).
+_RESERVED_RE = re.compile(r"\b(trigger|repeat|update)\b", re.IGNORECASE)
 
 
 def _escape_trigger(query: str) -> str:

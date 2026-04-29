@@ -174,6 +174,8 @@ update                          ← versions plugins installées
 
 7. **`cmd.value` = NULL pour les thermostats.** Les valeurs runtime (consigne, température mesurée, mode) ne sont pas dans `cmd.value` mais dans `history`. Si `cmd.value` retourne NULL sur un thermostat : utiliser `cmd::getHistory` via API ou interroger la table `history`.
 
+9. **`update` = nom de table réservé MySQL.** La table `update` contient les versions installées/disponibles des plugins et du core. Sans backtick → `ERROR 1064`. `db_query.py` gère `` `update` `` automatiquement (comme `trigger` et `repeat`) — écrire sans backticks dans les requêtes passées à `db_query.run()`. Colonnes utiles : `type` ('core'/'plugin'), `name`, `localVersion`, `remoteVersion`, `status` ('ok' = à jour).
+
 8. **`JSON_EXTRACT` dans une requête passée via `echo '...' | python3` échoue.** Les guillemets et accolades imbriqués cassent l'échappement shell. Symptôme : `JSONDecodeError` ou requête tronquée. Contournement : passer la requête SQL via `subprocess.run(['python3', 'scripts/db_query.py'], input=json.dumps(...))` en Python, ou via un fichier temporaire. Ne pas utiliser `echo '{"query": "...JSON_EXTRACT..."}' | python3` pour des requêtes complexes.
 
 ---
@@ -184,7 +186,7 @@ Chaque workflow : déclencheurs → étapes → sortie → scripts.
 
 ### WF1 — Audit général
 **Déclencheurs** : "audit", "santé de mon Jeedom", "fais le tour", "qu'est-ce qui cloche", "diagnostic complet"
-**Étapes** : (a) version check ; (b) charger `sql-cookbook.md §audit` + `audit-templates.md` + `health-checks.md` ; (c) batch SELECT : config système, plugins, eqLogics, scénarios, commandes mortes, dataStore, messages, mises à jour, qualité historique ; (d) optionnel `tail -n 200` logs core/php
+**Étapes** : (a) version check ; (b) charger `sql-cookbook.md §audit` + `audit-templates.md` + `health-checks.md` ; (c) batch SELECT : config système, plugins, eqLogics, scénarios, commandes mortes, dataStore, messages, mises à jour (table `` `update` `` — `localVersion` vs `remoteVersion`), qualité historique ; (d) optionnel `tail -n 200` logs core/php
 **Sortie** : synthèse exécutive (3-5 lignes) + 12 sections fixes. Sections vides omises.
 **Scripts** : SQL ad-hoc depuis cookbook
 
