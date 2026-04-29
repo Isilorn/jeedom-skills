@@ -13,6 +13,24 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ---
 
+## [1.0.1] — 2026-04-29
+
+Testé sur Jeedom 4.5.3 (MariaDB 10.5, Debian).
+
+### Fixed
+
+- **WF1 — Mises à jour système/plugins** : la table `update` (mot réservé MySQL) n'était pas échappée → requêtes silencieusement rejetées, données indisponibles dans l'audit général. Fix : `update` ajouté aux mots réservés auto-échappés dans `db_query.py` (closes #1)
+- `sql-cookbook.md` : backticks ajoutés sur tous les `FROM \`update\``
+- `SKILL.md` : gotcha #9 documenté + WF1 référence explicite à la table `update`
+
+### Docs
+
+- 5 corrections post-audit exhaustif : liens ADR cassés dans `architecture.md`, statut recette 7/8 → 8/8 dans `CHANGELOG.md`, marqueurs `✅ Jx` retirés du §9 de `SKILL.md`, terminologie "Forensique causale" uniformisée, WF7-11 ajoutés au tableau modes API
+- Roadmap V2 : couche MCP ajoutée
+- `docs/release-checklist.md` : procédure de release avec vérifications GitHub
+
+---
+
 ## [1.0.0] — 2026-04-28
 
 Testé sur Jeedom 4.5.3 (MariaDB 10.5, Debian).

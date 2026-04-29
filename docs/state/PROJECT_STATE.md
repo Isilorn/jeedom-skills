@@ -1,8 +1,8 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 1.0.0
-**Jalon en cours** : J7 terminé — recette 8/8 validée, release V1.0.0 en cours de finalisation
-**Dernière session** : 2026-04-28
+**Version actuelle** : 1.0.1
+**Jalon en cours** : post-release — V1.1 à démarrer
+**Dernière session** : 2026-04-29
 
 ---
 
@@ -77,7 +77,7 @@
 
 ## Ce qui est en cours / en attente
 
-Release V1.0.0 officielle — critère go/no-go restant : 2 utilisateurs externes.
+V1.0.1 publiée (fix WF1 mises à jour). Démarrage V1.1 en prochaine session.
 
 ## Décisions ouvertes
 
