@@ -54,7 +54,12 @@
 - `docs/guides/getting-started.md`, `usage.md`, `troubleshooting.md`, `architecture.md`
 - `docs/decisions/0018-release-v1.0.0.md` — ADR bilan release
 - `README.md` finalisé, `CONTRIBUTING.md` complet, `CHANGELOG.md` entrée v1.0.0
-- `pyproject.toml` version 1.0.0
+- `pyproject.toml` version 1.0.1
+- `docs/decisions/0019-mcp-architecture.md` — options A/B/C MCP (superseded par ADR-0020)
+- `docs/decisions/0020-jeedom-mcp-projet-separe.md` — jeedom-mcp projet séparé, plugin natif
+- `docs/decisions/0021-jeedom-plugin-dev-skill.md` — jeedom-plugin-dev second skill
+- `docs/decisions/0006-lecture-seule-absolue.md` — amendement lecture seule perpétuelle
+- `docs/sessions/2026-04-28-j7-release-v1.md`, `2026-05-01-j8-roadmap-refonte.md`
 
 ### Recette d'acceptation J7 — 8/8 validés
 
