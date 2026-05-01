@@ -163,8 +163,9 @@ Retours, bugs et propositions de nouveaux plugins bienvenus — voir [CONTRIBUTI
 
 - Nouveaux plugins tier-1 (Zigbee2MQTT natif, Z-Wave JS, Philips Hue...)
 - Tests d'intégration automatisés
-- Opérations API réversibles (write-once, avec confirmation explicite)
-- Architecture MCP — en réflexion (voir [ADR-0019](docs/decisions/0019-mcp-architecture.md))
+- Second skill `jeedom-plugin-dev` — assistance au développement de plugins Jeedom
+
+> **Note :** les opérations modifiantes (lancer scénario, activer/désactiver, écrire variable) ne feront **pas** partie de `jeedom-audit`. La skill reste lecture seule absolue à perpétuité. Ces capacités seront implémentées dans un projet séparé : **[jeedom-mcp](https://github.com/Isilorn/jeedom-mcp)** — plugin Jeedom natif distribué via le market, exposant la box via le protocole MCP pour Claude Desktop et Cursor. Voir [ADR-0020](docs/decisions/0020-jeedom-mcp-projet-separe.md).
 
 Voir le [CHANGELOG](CHANGELOG.md) pour le détail des versions.
 

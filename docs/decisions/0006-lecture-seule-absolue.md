@@ -39,3 +39,26 @@ Une skill de diagnostic et d'audit Jeedom pourrait en théorie effectuer des mod
 - ⚠️ Certaines demandes naturelles ("change le nom de cet équipement") reçoivent un refus + pas-à-pas
 - ⚠️ La blacklist API doit être maintenue à jour à chaque version Jeedom
 - 🔗 ADR 0005 (accès MySQL), PLANNING §3.3-3.4
+
+---
+
+## Amendement — 2026-05-01 : lecture seule perpétuelle
+
+**Décision amendée** : la lecture seule n'est plus "absolue V1 avec roadmap V2/V3 modifiante" — elle est **perpétuelle dans `jeedom-audit`**.
+
+Les capacités modifiantes prévues en V2/V3 (lancer scénario, activer/désactiver, écrire variable dataStore, modifications légères de configuration) sont **définitivement retirées du périmètre de cette skill**. Elles seront implémentées dans un projet séparé (voir ADR-0020).
+
+**Raisons :**
+
+1. **Identité de la skill** : la lecture seule absolue est devenue une caractéristique identitaire forte, valorisée par la communauté ("la skill ne peut pas casser votre install"). L'affaiblir — même progressivement — détruirait cette proposition de valeur.
+
+2. **Destination naturelle** : le protocole MCP, conçu pour exposer des outils à n'importe quel client LLM, est l'architecture adéquate pour les opérations pilotées. Un plugin Jeedom natif distribuable via le market est le bon vecteur — pas une skill Claude Code réservée aux power users avec SSH.
+
+3. **Séparation des préoccupations** : `jeedom-audit` = outil de compréhension (diagnostic, explication, audit). `jeedom-mcp` = outil de contrôle (actions, modifications). Deux produits distincts, deux personas distincts.
+
+**Conséquences de l'amendement :**
+
+- ✅ La roadmap V2/V3 de ce repo ne contient plus de capacités modifiantes
+- ✅ La table "Phase / Posture / Périmètre" ci-dessus est caduque pour les lignes V2 et V3
+- ✅ PLANNING.md §10 (roadmap) doit être lu à la lumière de cet amendement
+- 🔗 ADR-0020 (projet jeedom-mcp — plugin Jeedom natif MCP)

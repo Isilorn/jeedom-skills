@@ -1215,6 +1215,16 @@ Documentée dans `tests/fixtures/README.md` à J1 (rédaction Claude Code).
 
 ## 10. Roadmap post-V1
 
+> **⚠️ Amendement stratégique — 2026-05-01**
+>
+> Les lignes V2 et V3 ci-dessous ont été partiellement révisées par trois décisions prises post-release :
+>
+> - **Lecture seule perpétuelle** : les capacités modifiantes (V2 : lancer scénario, activer/désactiver ; V3 : modifications config) sont **retirées du périmètre de `jeedom-audit`** (ADR-0006 amendé). La skill reste lecture seule absolue à perpétuité.
+> - **jeedom-mcp** : projet séparé (plugin Jeedom natif, market) pour les capacités MCP et modifiantes (ADR-0020).
+> - **jeedom-plugin-dev** : second skill dans ce repo (remplace "capacités modifiantes V2" comme objectif V2) (ADR-0021).
+>
+> En cas de conflit, les ADRs ci-dessus font autorité sur les lignes V2/V3/V4+ de cette section.
+
 ### V1.5 (mineur)
 - `dead_cmds.py` (cross-check natif Jeedom commandes mortes)
 - `history_query.py` (helper historique cmd)

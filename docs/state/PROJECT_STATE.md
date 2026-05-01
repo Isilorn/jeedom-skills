@@ -1,8 +1,8 @@
 # État du projet jeedom-audit
 
 **Version actuelle** : 1.0.1
-**Jalon en cours** : post-release — V1.1 à démarrer
-**Dernière session** : 2026-04-29
+**Jalon en cours** : post-release — V1.1 à démarrer / idéation jeedom-mcp à planifier
+**Dernière session** : 2026-05-01 (J8 — refonte roadmap)
 
 ---
 
@@ -77,15 +77,25 @@
 
 ## Ce qui est en cours / en attente
 
-V1.0.1 publiée (fix WF1 mises à jour). Démarrage V1.1 en prochaine session.
+V1.0.1 publiée (fix WF1 mises à jour). Refonte roadmap actée (J8, 2026-05-01).
+
+**Prochaines étapes (au choix du PO) :**
+
+- Session d'idéation formelle `jeedom-mcp` (nouveau repo, architecture plugin Jeedom natif MCP)
+- Démarrage V1.1 : support Jeedom 4.6, fixtures DB synthétiques, retours communauté
 
 ## Décisions ouvertes
 
-Aucune.
+Aucune — les trois décisions stratégiques de J8 sont actées en ADRs (0006 amendé, 0020, 0021).
 
 ## Blocages
 
 Aucun.
+
+## Jalons post-release
+
+- **J7 (2026-04-28)** : recette 8/8, release v1.0.0, annonce forum
+- **J8 (2026-05-01)** : refonte roadmap — ADR-0006 amendé, ADR-0019 superseded, ADR-0020 jeedom-mcp, ADR-0021 jeedom-plugin-dev
 
 ## Découvertes techniques (J4-J7)
 

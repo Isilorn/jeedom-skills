@@ -1,7 +1,7 @@
 ---
 id: ADR-0019
 titre: Architecture MCP — intégration d'un serveur MCP dans jeedom-audit
-statut: En réflexion
+statut: Superseded by ADR-0020
 date: 2026-04-30
 ---
 
