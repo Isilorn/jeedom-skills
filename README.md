@@ -161,10 +161,10 @@ Retours, bugs et propositions de nouveaux plugins bienvenus — voir [CONTRIBUTI
 
 ### V2
 
-- **Couche MCP** — exposer les scripts comme outils MCP (portabilité Claude Desktop, Cursor, et autres clients MCP)
 - Nouveaux plugins tier-1 (Zigbee2MQTT natif, Z-Wave JS, Philips Hue...)
 - Tests d'intégration automatisés
 - Opérations API réversibles (write-once, avec confirmation explicite)
+- Architecture MCP — en réflexion (voir [ADR-0019](docs/decisions/0019-mcp-architecture.md))
 
 Voir le [CHANGELOG](CHANGELOG.md) pour le détail des versions.
 
