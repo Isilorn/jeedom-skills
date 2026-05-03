@@ -165,7 +165,7 @@ Retours, bugs et propositions de nouveaux plugins bienvenus — voir [CONTRIBUTI
 - Tests d'intégration automatisés
 - Second skill `jeedom-plugin-dev` — assistance au développement de plugins Jeedom
 
-> **Note :** les opérations modifiantes (lancer scénario, activer/désactiver, écrire variable) ne feront **pas** partie de `jeedom-audit`. La skill reste lecture seule absolue à perpétuité. Ces capacités seront implémentées dans un projet séparé : **[jeedom-mcp](https://github.com/Isilorn/jeedom-mcp)** — plugin Jeedom natif distribué via le market, exposant la box via le protocole MCP pour Claude Desktop et Cursor. Voir [ADR-0020](docs/decisions/0020-jeedom-mcp-projet-separe.md).
+> **Note :** les opérations modifiantes (lancer scénario, activer/désactiver, écrire variable) ne feront **pas** partie de `jeedom-audit`. La skill reste lecture seule absolue à perpétuité. Ces capacités seront implémentées dans un projet séparé : **[holmesMCP](https://github.com/Isilorn/holmesMcp)** — plugin Jeedom natif distribué via le market, exposant la box via le protocole MCP pour Claude Desktop et Cursor. Voir [ADR-0020](docs/decisions/0020-holmesmcp-projet-separe.md).
 
 Voir le [CHANGELOG](CHANGELOG.md) pour le détail des versions.
 

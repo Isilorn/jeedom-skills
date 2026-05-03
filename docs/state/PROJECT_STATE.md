@@ -1,7 +1,7 @@
 # État du projet jeedom-audit
 
 **Version actuelle** : 1.0.1
-**Jalon en cours** : post-release — V1.1 à démarrer / idéation jeedom-mcp à planifier
+**Jalon en cours** : post-release — V1.1 à démarrer / idéation holmesMCP à planifier
 **Dernière session** : 2026-05-01 (J8 — refonte roadmap)
 
 ---
@@ -56,7 +56,7 @@
 - `README.md` finalisé, `CONTRIBUTING.md` complet, `CHANGELOG.md` entrée v1.0.0
 - `pyproject.toml` version 1.0.1
 - `docs/decisions/0019-mcp-architecture.md` — options A/B/C MCP (superseded par ADR-0020)
-- `docs/decisions/0020-jeedom-mcp-projet-separe.md` — jeedom-mcp projet séparé, plugin natif
+- `docs/decisions/0020-holmesmcp-projet-separe.md` — holmesMCP projet séparé, plugin natif
 - `docs/decisions/0021-jeedom-plugin-dev-skill.md` — jeedom-plugin-dev second skill
 - `docs/decisions/0006-lecture-seule-absolue.md` — amendement lecture seule perpétuelle
 - `docs/sessions/2026-04-28-j7-release-v1.md`, `2026-05-01-j8-roadmap-refonte.md`
@@ -86,7 +86,7 @@ V1.0.1 publiée (fix WF1 mises à jour). Refonte roadmap actée (J8, 2026-05-01)
 
 **Prochaines étapes (au choix du PO) :**
 
-- Session d'idéation formelle `jeedom-mcp` (nouveau repo, architecture plugin Jeedom natif MCP)
+- Session d'idéation formelle `holmesMCP` (nouveau repo, architecture plugin Jeedom natif MCP)
 - Démarrage V1.1 : support Jeedom 4.6, fixtures DB synthétiques, retours communauté
 
 ## Décisions ouvertes
@@ -100,7 +100,7 @@ Aucun.
 ## Jalons post-release
 
 - **J7 (2026-04-28)** : recette 8/8, release v1.0.0, annonce forum
-- **J8 (2026-05-01)** : refonte roadmap — ADR-0006 amendé, ADR-0019 superseded, ADR-0020 jeedom-mcp, ADR-0021 jeedom-plugin-dev
+- **J8 (2026-05-01)** : refonte roadmap — ADR-0006 amendé, ADR-0019 superseded, ADR-0020 holmesMCP, ADR-0021 jeedom-plugin-dev
 
 ## Découvertes techniques (J4-J7)
 

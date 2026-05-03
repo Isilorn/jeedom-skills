@@ -54,11 +54,11 @@ Les capacités modifiantes prévues en V2/V3 (lancer scénario, activer/désacti
 
 2. **Destination naturelle** : le protocole MCP, conçu pour exposer des outils à n'importe quel client LLM, est l'architecture adéquate pour les opérations pilotées. Un plugin Jeedom natif distribuable via le market est le bon vecteur — pas une skill Claude Code réservée aux power users avec SSH.
 
-3. **Séparation des préoccupations** : `jeedom-audit` = outil de compréhension (diagnostic, explication, audit). `jeedom-mcp` = outil de contrôle (actions, modifications). Deux produits distincts, deux personas distincts.
+3. **Séparation des préoccupations** : `jeedom-audit` = outil de compréhension (diagnostic, explication, audit). `holmesMCP` = outil de contrôle (actions, modifications). Deux produits distincts, deux personas distincts.
 
 **Conséquences de l'amendement :**
 
 - ✅ La roadmap V2/V3 de ce repo ne contient plus de capacités modifiantes
 - ✅ La table "Phase / Posture / Périmètre" ci-dessus est caduque pour les lignes V2 et V3
 - ✅ PLANNING.md §10 (roadmap) doit être lu à la lumière de cet amendement
-- 🔗 ADR-0020 (projet jeedom-mcp — plugin Jeedom natif MCP)
+- 🔗 ADR-0020 (projet holmesMCP — plugin Jeedom natif MCP)

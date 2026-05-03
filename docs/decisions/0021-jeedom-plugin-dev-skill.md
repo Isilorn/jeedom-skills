@@ -14,7 +14,7 @@ Le développement de plugins Jeedom est un besoin communautaire récurrent et so
 
 **Créer une second skill `jeedom-plugin-dev`** dans ce repo, pour l'assistance au développement de plugins Jeedom (PHP, structure, tests, CI, market).
 
-Cette skill est distincte de `jeedom-mcp` (ADR-0020) : elle cible les **développeurs** qui créent des plugins, pas les utilisateurs finaux qui pilotent leur box.
+Cette skill est distincte de `holmesMCP` (ADR-0020) : elle cible les **développeurs** qui créent des plugins, pas les utilisateurs finaux qui pilotent leur box.
 
 ### Périmètre envisagé
 

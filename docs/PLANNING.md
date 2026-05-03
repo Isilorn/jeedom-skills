@@ -1220,7 +1220,7 @@ Documentée dans `tests/fixtures/README.md` à J1 (rédaction Claude Code).
 > Les lignes V2 et V3 ci-dessous ont été partiellement révisées par trois décisions prises post-release :
 >
 > - **Lecture seule perpétuelle** : les capacités modifiantes (V2 : lancer scénario, activer/désactiver ; V3 : modifications config) sont **retirées du périmètre de `jeedom-audit`** (ADR-0006 amendé). La skill reste lecture seule absolue à perpétuité.
-> - **jeedom-mcp** : projet séparé (plugin Jeedom natif, market) pour les capacités MCP et modifiantes (ADR-0020).
+> - **holmesMCP** : projet séparé (plugin Jeedom natif, market) pour les capacités MCP et modifiantes (ADR-0020).
 > - **jeedom-plugin-dev** : second skill dans ce repo (remplace "capacités modifiantes V2" comme objectif V2) (ADR-0021).
 >
 > En cas de conflit, les ADRs ci-dessus font autorité sur les lignes V2/V3/V4+ de cette section.

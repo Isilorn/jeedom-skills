@@ -15,11 +15,11 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 - `docs/decisions/0006-lecture-seule-absolue.md` : amendement — lecture seule **perpétuelle** (pas seulement V1) ; roadmap V2/V3 modifiante retirée du périmètre de `jeedom-audit`
 - `docs/decisions/0019-mcp-architecture.md` : statut → Superseded by ADR-0020
-- `docs/decisions/0020-jeedom-mcp-projet-separe.md` : nouvelle ADR — jeedom-mcp comme projet séparé, plugin Jeedom natif MCP, distribution via market
+- `docs/decisions/0020-holmesmcp-projet-separe.md` : nouvelle ADR — holmesMCP comme projet séparé, plugin Jeedom natif MCP, distribution via market
 - `docs/decisions/0021-jeedom-plugin-dev-skill.md` : nouvelle ADR — jeedom-plugin-dev comme second skill dans ce repo (post-V1.1)
 - `docs/sessions/2026-04-28-j7-release-v1.md` : session J7 documentée (reconstruction)
 - `docs/sessions/2026-05-01-j8-roadmap-refonte.md` : session J8 — refonte roadmap stratégique
-- `README.md` : roadmap V2 mise à jour — retrait écriture, note jeedom-mcp, ajout jeedom-plugin-dev
+- `README.md` : roadmap V2 mise à jour — retrait écriture, note holmesMCP, ajout jeedom-plugin-dev
 - `docs/PLANNING.md §10` : encadré d'amendement stratégique pointant vers ADRs 0006/0020/0021
 
 ---

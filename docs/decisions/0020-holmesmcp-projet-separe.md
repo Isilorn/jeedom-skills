@@ -1,4 +1,4 @@
-# ADR-0020 — jeedom-mcp : projet séparé, plugin Jeedom natif
+# ADR-0020 — holmesMCP : projet séparé, plugin Jeedom natif
 
 - **Date** : 2026-05-01
 - **Statut** : Accepté
@@ -18,17 +18,17 @@ Les capacités modifiantes prévues en V2/V3 (lancer scénario, activer/désacti
 
 ## Décision
 
-**Créer un projet séparé `jeedom-mcp`** : un plugin Jeedom natif qui expose les données et commandes de la box via le protocole MCP (Model Context Protocol, Anthropic).
+**Créer un projet séparé `holmesMCP`** : un plugin Jeedom natif qui expose les données et commandes de la box via le protocole MCP (Model Context Protocol, Anthropic).
 
 Ce projet est **distinct de `jeedom-skills`** — autre repo, autre cycle de release, autre distribution.
 
-### Ce que jeedom-mcp contiendra
+### Ce que holmesMCP contiendra
 
 | Catégorie | Exemples |
 |---|---|
 | Outils lecture | Équipements, scénarios, commandes, plugins, logs, historique |
 | Outils écriture | Lancer scénario, activer/désactiver, exécuter commande action, écrire variable dataStore |
-| Outils config légère | Renommages, activation Types Génériques (V2+ de jeedom-mcp) |
+| Outils config légère | Renommages, activation Types Génériques (V2+ de holmesMCP) |
 
 ### Architecture cible
 
@@ -37,7 +37,7 @@ Ce projet est **distinct de `jeedom-skills`** — autre repo, autre cycle de rel
 ```
 [Claude Desktop / Cursor / n'importe quel client MCP]
         ↓ HTTP/SSE
-[Plugin jeedom-mcp — box Jeedom]
+[Plugin holmesMCP — box Jeedom]
         ↓ PHP/MySQL natif Jeedom
 [MySQL + logs + API Jeedom]
 ```
@@ -48,7 +48,7 @@ Ce projet est **distinct de `jeedom-skills`** — autre repo, autre cycle de rel
 - Configuration via l'UI Jeedom
 - Authentification par clé API Jeedom existante
 
-### Ce que jeedom-mcp n'est pas
+### Ce que holmesMCP n'est pas
 
 - **Pas une évolution de jeedom-audit** : les deux projets coexistent, servent des personas différents
 - **Pas un remplacement de la skill** : `jeedom-audit` garde sa valeur propre (orchestration adaptative, forensique causale, connaissance domaine dans SKILL.md)
@@ -67,7 +67,7 @@ Ajouter des capacités modifiantes à la skill existante. Écarté : détruirait
 ## Conséquences
 
 - ✅ `jeedom-audit` reste lecture seule absolue à perpétuité (ADR-0006 amendé)
-- ✅ `jeedom-mcp` adresse les Jeedomistes sur Claude Desktop / Cursor — persona distinct
+- ✅ `holmesMCP` adresse les Jeedomistes sur Claude Desktop / Cursor — persona distinct
 - ✅ Pas de conflit avec les plugins MCP existants (MCP AI Server, MP_Server) : la différence est l'accès MySQL direct + distribution open source + gratuit
 - ⚠️ Effort de développement significatif : plugin PHP + daemon MCP — hors périmètre de ce repo
 - ⚠️ La session d'idéation formelle (avec modèle de raisonnement approfondi) est prévue pour définir l'architecture détaillée avant de commencer l'implémentation
