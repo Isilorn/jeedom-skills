@@ -183,6 +183,6 @@ Voir le [CHANGELOG](CHANGELOG.md) pour le détail des versions.
 
 ## License
 
-MIT — [Isilorn](https://github.com/Isilorn)
+AGPL-3.0 — [Isilorn](https://github.com/Isilorn)
 
 > Testé sur Jeedom 4.5.3 (MariaDB 10.5, Debian) — 2026-04-28

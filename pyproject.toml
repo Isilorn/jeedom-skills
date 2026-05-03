@@ -3,7 +3,7 @@ name = "jeedom-skills"
 version = "1.0.1"
 description = "Claude Code skills for Jeedom home automation — read-only audit, diagnosis, and explanation tools for the French-speaking Jeedom community"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Isilorn" }]
 readme = "README.md"
 

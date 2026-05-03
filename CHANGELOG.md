@@ -11,6 +11,10 @@ Note: Each release mentions the Jeedom version tested at the time of publication
 
 ## [Unreleased]
 
+### Changed
+
+- Licence MIT → AGPL-3.0 (ADR-0022) — alignement avec holmesMCP et l'écosystème Jeedom
+
 ### Docs
 
 - `docs/decisions/0006-lecture-seule-absolue.md` : amendement — lecture seule **perpétuelle** (pas seulement V1) ; roadmap V2/V3 modifiante retirée du périmètre de `jeedom-audit`

@@ -1,7 +1,7 @@
 # ADR 0013 : Licence MIT
 
 - **Date** : 2026-04-27
-- **Statut** : Accepté
+- **Statut** : Superseded by ADR-0022
 - **Contexte de décision** : idéation initiale (D11.3)
 
 ## Contexte
