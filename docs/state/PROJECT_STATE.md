@@ -1,8 +1,8 @@
 # État du projet jeedom-audit
 
-**Version actuelle** : 1.0.1
-**Jalon en cours** : post-release — V1.1 à démarrer / idéation holmesMCP à planifier
-**Dernière session** : 2026-05-01 (J8 — refonte roadmap)
+**Version actuelle** : 1.0.1 → cible V2.0.0 (migration Holmes MCP)
+**Jalon en cours** : M0 — Baseline Phase 0 (13 WF à documenter sur `main`)
+**Dernière session** : 2026-05-06 (Mplan-1 — planification migration M0–M8), Mplan-1 ✅ (briefs M0–M8 créés, routines fin de session adoptées)
 
 ---
 
@@ -82,16 +82,18 @@
 
 ## Ce qui est en cours / en attente
 
-V1.0.1 publiée (fix WF1 mises à jour). Refonte roadmap actée (J8, 2026-05-01).
+Migration Holmes MCP planifiée (Mplan-1, 2026-05-06). 9 jalons M0–M8 définis, briefs créés.
 
-**Prochaines étapes (au choix du PO) :**
+**Prochaine étape : M0-1** — exécuter WF1–WF7 sur `main` (SSH + MySQL), documenter baseline Phase 0.
+Lire `docs/sessions/M0-brief.md` en début de session.
 
-- Session d'idéation formelle `holmesMCP` (nouveau repo, architecture plugin Jeedom natif MCP)
-- Démarrage V1.1 : support Jeedom 4.6, fixtures DB synthétiques, retours communauté
+**Séquence migration :**
+M0 (baseline) → M1 (infra) → M2 (nettoyage) → M3 (WF scénarios) → M4 (WF audit/refactor)
+→ M5 (WF entités) → M6 (WF lectures rapides) → M7 (WF graphe) → M8 (validation + V2.0.0)
 
 ## Décisions ouvertes
 
-Aucune — les trois décisions stratégiques de J8 sont actées en ADRs (0006 amendé, 0020, 0021).
+Aucune.
 
 ## Blocages
 
@@ -101,6 +103,7 @@ Aucun.
 
 - **J7 (2026-04-28)** : recette 8/8, release v1.0.0, annonce forum
 - **J8 (2026-05-01)** : refonte roadmap — ADR-0006 amendé, ADR-0019 superseded, ADR-0020 holmesMCP, ADR-0021 jeedom-plugin-dev
+- **Mplan (2026-05-06)** : planification migration Holmes MCP — jalons M0–M8 définis, 9 briefs créés, routines fin de session adoptées
 
 ## Découvertes techniques (J4-J7)
 
