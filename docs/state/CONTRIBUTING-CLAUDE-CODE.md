@@ -42,61 +42,181 @@ Ces demandes sont **explicites et timées** dans chaque réponse de Claude Code 
 2. Lire `docs/state/PROJECT_STATE.md` — état actuel et ce qui est en attente du PO
 3. Lire la **dernière entrée** `docs/sessions/` — reprendre le fil exact
 4. Scanner les ADRs **nouvelles depuis la date de dernière session** (cf. `docs/decisions/README.md`)
-5. Annoncer au PO : état du projet + validations en attente + proposition d'objectifs pour la session
+5. Lire le **brief du jalon en cours** (`docs/sessions/Mx-brief.md` si existant) — objectifs, DoD, sous-sessions prévues
+6. Annoncer au PO : état du projet + validations en attente + proposition d'objectifs pour la session
 
 ---
 
-## 4. Routine de fin de session significative
+## 4a. Routine de fin de sous-session
 
-**Ordre strict :**
-1. Mettre à jour `docs/state/PROJECT_STATE.md` (sections "Ce qui marche", "En cours", "Prochaines étapes", "En attente du PO")
-2. Créer une entrée `docs/sessions/YYYY-MM-DD-<sujet>.md` avec les sections définies en §5
-3. Créer les ADR(s) pour les décisions non triviales de la session (cf. critère §6)
-4. Marquer les TODOs traçables dans le code : `# TODO(jalon-JX): <description>`
-5. **Mettre à jour la documentation visible** — exhaustivement, dans cet ordre :
-   - `README.md` : bannière de statut + tableau des jalons
-   - `CHANGELOG.md` : entrée `[X.Y.Z] — YYYY-MM-DD` avec sous-sections Added / Fixed / Validated / Discovered
-   - `jeedom-audit/SKILL.md` : si des workflows, scripts ou comportements ont changé (sections §3, §9, §10 en particulier)
-   - Tout autre fichier de `references/` ou `docs/` rendu inexact par la session
-6. **Relire et mettre à jour les fichiers mémoire Claude Code** (`~/.claude/projects/.../memory/`) :
-   - Mettre à jour `project_j0_context.md` : jalons, roadmap, décisions structurantes
-   - Mettre à jour `MEMORY.md` : index si de nouvelles entrées ont été ajoutées
-   - Mettre à jour les autres fichiers si des informations ont changé (profil PO, feedback, connexion box)
-   - Ne pas stocker dans la mémoire : contenu de briefs, résumés d'activité, état éphémère de session
-7. Commit avec message clair, puis **demander au PO avant de push**
+**Déclencheur PO :** "Déroule la routine de fin de sous-session"
+
+Exécuter dans l'ordre. Chaque étape est **bloquante** — ne pas passer à la suivante si elle échoue.
+
+### Étape 1 — Qualité (bloquante)
+
+Gate variable selon le jalon en cours :
+
+| Jalon | Gate qualité |
+|---|---|
+| M0 | 13 WF documentés avec verdict dans le tableau baseline |
+| M1 | `pytest tests/` vert + `.mcp.json` JSON valide |
+| M2 | `python tests/lint/check_skill_refs.py` propre |
+| M3–M7 | `check_skill_refs.py` propre + WF du jalon testé, résultat noté tableau Phase 1 |
+| M8 | `check_skill_refs.py` propre + 13 WF Phase 1 tous complétés |
+| Hors migration | Vérifier la complétude des livrables annoncés — pas de gate technique |
+
+Si la gate échoue → corriger avant de continuer.
+
+### Étape 2 — Fichier de session
+
+Créer `docs/sessions/YYYY-MM-DD-{Mx-y-slug}.md` avec le format défini en §5.
+
+### Étape 3 — PROJECT_STATE.md
+
+- `Dernière session` → `YYYY-MM-DD-{Mx-y}`
+- `Prochaine session` → `{Mx-(y+1)} — objectif court`
+- `Statut global` → ajouter `, {Mx-y} ✅ (résumé 1 ligne)` en fin de ligne
+
+### Étape 4 — Commit doc
+
+```bash
+git add docs/sessions/YYYY-MM-DD-{Mx-y-slug}.md docs/state/PROJECT_STATE.md
+git commit -m "docs({Mx-y}): fichier session + PROJECT_STATE"
+```
+
+Puis **demander au PO avant de push**.
+
+### Étape 5 — Mémoire Claude Code
+
+Mettre à jour `~/.claude/projects/-home-gtillit-Github-jeedom-skills/memory/project_j0_context.md` :
+
+- Ligne état → mettre à jour avec la date et le statut courant
+- Ajouter bloc `**{Mx-y} livré**` avec livrables clés, commit hash, faits notables
+
+Mettre à jour `MEMORY.md` (index) si de nouvelles entrées ont été ajoutées.
+Ne pas stocker : contenu de briefs, résumés d'activité, état éphémère de session.
+
+### Checklist finale
+
+- [ ] Gate qualité verte (étape 1)
+- [ ] Fichier de session créé (`docs/sessions/`)
+- [ ] `PROJECT_STATE.md` mis à jour
+- [ ] Commit doc posé
+- [ ] Push demandé au PO
+- [ ] Mémoire Claude Code à jour
+
+---
+
+## 4b. Routine de fin de jalon
+
+**Déclencheur PO :** "Vérifie la DoD du jalon et si elle est intégralement vérifiée : Déroule la routine de fin de jalon"
+
+### Étape 1 — Vérification DoD
+
+Lire le brief du jalon (`docs/sessions/Mx-brief.md`) — cocher chaque critère du DoD.
+Si un critère n'est pas ✅ → **ne pas continuer**. Signaler au PO ce qui manque.
+
+### Étape 2 — Merge et tag (M8 uniquement)
+
+Pour M0–M7 : fin de jalon = DoD ✅ sur `develop`. Pas de merge ni de tag.
+
+Pour M8 (release V2.0.0) :
+
+```bash
+git checkout main
+git merge --ff-only develop
+git tag v2.0.0
+git push origin main develop --tags
+```
+
+> Si `main` a divergé depuis le début du jalon (hotfix), utiliser `--no-ff` à la place de `--ff-only`.
+
+Resynchroniser `develop` immédiatement après :
+
+```bash
+git checkout develop
+git merge --ff-only main
+git push origin develop
+```
+
+Résultat : `main` = `develop` = même commit. Prêt pour le jalon suivant.
+
+### Étape 3 — PROJECT_STATE.md
+
+Marquer le jalon ✅, noter le prochain jalon en "Prochaines étapes".
+
+### Étape 4 — Mémoire Claude Code
+
+Marquer le jalon complet dans `project_j0_context.md`. Mettre à jour la roadmap si nécessaire.
 
 ---
 
 ## 5. Format d'une entrée de session
 
-Fichier : `docs/sessions/YYYY-MM-DD-<sujet>.md`
+Fichier : `docs/sessions/YYYY-MM-DD-{Mx-y-slug}.md`
 
 ```markdown
-# Session YYYY-MM-DD — <sujet court>
+# Session {Mx-y} — {Titre descriptif}
 
-## Objectif de la session
-[1-2 phrases]
+**Date** : YYYY-MM-DD
+**Branche** : `develop` (ou `main` pour sessions de gouvernance)
+**Commit(s)** : {hash(es)}
 
-## Décisions prises pendant la session
-- [Décision 1] : [rationale court]
-- [Décision 2] : ...
+---
 
-## Découvertes / surprises
-[Tout ce qui était inattendu ou qui a modifié la compréhension]
+## Objectif
 
-## Travail réalisé
-- [Fichier ou fonctionnalité 1]
-- ...
+{1-2 phrases}
+
+---
+
+## Livrables
+
+| Fichier | Ce qui a changé |
+|---|---|
+| `path/to/file` | {description concise} |
+
+---
+
+## Décisions prises en session
+
+{Choix non triviaux uniquement — contexte → choix → raison. Si aucun : "Aucune décision structurante."}
+
+---
+
+## Résultats qualité
+
+| Métrique | Valeur |
+|---|---|
+| Gate qualité | {description} ✅ |
+| Tests | X/X ✅ (si applicable) |
+| Linter | propre (si applicable) |
+
+---
+
+## Incidents / anomalies
+
+{Bug, écart par rapport au plan. Si rien : "Aucun."}
+
+---
 
 ## Reste à faire (dans ce jalon)
-- [Item 1]
-- ...
 
-## Pour la prochaine session
-[Phrase claire sur par où commencer — ex. "Reprendre depuis logs_query.py:42 (TODO marqué)"]
+- {Item 1}
+
+---
 
 ## Pour le PO
-[Actions requises du PO avant ou pendant la prochaine session]
+
+{Actions requises du PO avant ou pendant la prochaine sous-session. Si rien : "Aucune."}
+
+---
+
+## Prochaine sous-session : {Mx-(y+1)}
+
+**Objectif** : {description}
+**Pré-requis** : {dépendances}
 ```
 
 ---
@@ -131,7 +251,7 @@ Rare. Seulement pour un amendement stratégique : changement de périmètre, ver
 
 ---
 
-## 8. Si Claude Code perd le fil entre sessions
+## 9. Si Claude Code perd le fil entre sessions
 
 **Ne pas inventer.** Demander explicitement au PO de récapituler plutôt que de combler les lacunes par conjecture. La discipline axe 2 (PROJECT_STATE.md + sessions/) est conçue pour éviter ce cas — si elle a été respectée, la relecture de début de session devrait suffire.
 
