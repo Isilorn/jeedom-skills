@@ -58,7 +58,12 @@ Ces demandes sont **explicites et timées** dans chaque réponse de Claude Code 
    - `CHANGELOG.md` : entrée `[X.Y.Z] — YYYY-MM-DD` avec sous-sections Added / Fixed / Validated / Discovered
    - `jeedom-audit/SKILL.md` : si des workflows, scripts ou comportements ont changé (sections §3, §9, §10 en particulier)
    - Tout autre fichier de `references/` ou `docs/` rendu inexact par la session
-6. Commit avec message clair
+6. **Relire et mettre à jour les fichiers mémoire Claude Code** (`~/.claude/projects/.../memory/`) :
+   - Mettre à jour `project_j0_context.md` : jalons, roadmap, décisions structurantes
+   - Mettre à jour `MEMORY.md` : index si de nouvelles entrées ont été ajoutées
+   - Mettre à jour les autres fichiers si des informations ont changé (profil PO, feedback, connexion box)
+   - Ne pas stocker dans la mémoire : contenu de briefs, résumés d'activité, état éphémère de session
+7. Commit avec message clair, puis **demander au PO avant de push**
 
 ---
 
